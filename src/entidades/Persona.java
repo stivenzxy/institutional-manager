@@ -1,13 +1,13 @@
 package entidades;
 
 
-public abstract class Persona {
+public class Persona {
     private double ID;
     private String nombres;
     private String apellidos;
     private String email;
 
-    Persona(double ID, String nombres, String apellidos, String email) {
+    public Persona(double ID, String nombres, String apellidos, String email) {
         this.ID = ID;
         this.nombres = nombres;
         this.apellidos = apellidos;
@@ -44,5 +44,15 @@ public abstract class Persona {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "Persona{" +
+                "ID=" + ID +
+                ", nombres='" + nombres + '\'' +
+                ", apellidos='" + apellidos + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }
