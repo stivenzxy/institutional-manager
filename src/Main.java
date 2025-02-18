@@ -3,6 +3,8 @@ import entidades.Persona;
 import institucion.Facultad;
 import institucion.Programa;
 
+// Jhorman Alexander Carrillo Perez - 160004505
+// Jesus Estiven Perez Torres - 160004725
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
