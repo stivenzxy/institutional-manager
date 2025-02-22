@@ -1,7 +1,9 @@
 package entidades;
 
 
-public class Persona {
+import java.io.Serializable;
+
+public class Persona implements Serializable { // Serializable convierte la clase en un flujo de bytes
     private double ID;
     private String nombres;
     private String apellidos;
@@ -48,11 +50,9 @@ public class Persona {
 
     @Override
     public String toString() {
-        return "Persona{" +
-                "ID=" + ID +
-                ", nombres='" + nombres + '\'' +
-                ", apellidos='" + apellidos + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+        return "{ \"ID\": " + ID +
+                ", \"Nombre\": \"" + nombres +
+                "\", \"Apellidos\": \"" + apellidos +
+                "\", \"Email\": \"" + email + "\" }";
     }
 }

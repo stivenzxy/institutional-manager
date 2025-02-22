@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CursosProfesores {
-    private ArrayList<CursoProfesor> listado;
+    private List<CursoProfesor> listado;
 
-    public CursosProfesores(ArrayList<CursoProfesor> listado) {
+    public CursosProfesores(List<CursoProfesor> listado) {
         this.listado = new ArrayList<>();
     }
 
-    public ArrayList<CursoProfesor> getListado() {
+    public List<CursoProfesor> getListado() {
         return listado;
     }
 
-    public void setListado(ArrayList<CursoProfesor> listado) {
+    public void setListado(List<CursoProfesor> listado) {
         this.listado = listado;
     }
 
