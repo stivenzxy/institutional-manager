@@ -74,23 +74,37 @@ public class InscripcionesPersonas implements Servicios {
         }
     }
     public boolean eliminar(double id) {
+        // Cargar todas las personas desde el archivo
+        cargarDatos(); // Usamos el método cargarDatos() que ya existe en tu clase
+
         if (listado == null || listado.isEmpty()) {
-            System.out.println("La lista de personas está vacía o no ha sido inicializada.");
+            System.out.println("No hay personas en el archivo.");
             return false;
         }
 
-        // Buscar la persona en la lista
-        for (Persona persona : listado) {
-            if (persona.getID() == id) { // Comparar el ID de la persona con el proporcionado
-                listado.remove(persona); // Eliminar la persona de la lista
-                System.out.println("Persona con ID " + id + " eliminada exitosamente.");
-                return true;
-            }
-        }
+        // Buscar y eliminar la persona con el ID especificado
+        boolean eliminado = listado.removeIf(persona -> persona.getID() == id);
 
-        // Si no se encuentra la persona
-        System.out.println("No se encontró ninguna persona con el ID " + id + ".");
-        return false;
+        if (eliminado) {
+            System.out.println("Persona con ID " + id + " eliminada exitosamente.");
+            guardarInformacionActualizada(); // Guardar la lista actualizada en el archivo
+            return true;
+        } else {
+            System.out.println("No se encontró ninguna persona con el ID " + id + ".");
+            return false;
+        }
+    }
+
+    // Método para guardar la lista actualizada en el archivo
+    private void guardarInformacionActualizada() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("personas.bin"))) {
+            for (Persona persona : listado) {
+                oos.writeObject(persona);
+            }
+            System.out.println("Lista de personas guardada exitosamente en el archivo.");
+        } catch (IOException e) {
+            System.out.println("Error al guardar personas en el archivo: " + e.getMessage());
+        }
     }
 
 
