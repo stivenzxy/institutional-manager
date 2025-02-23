@@ -39,8 +39,8 @@ public class InscripcionesPersonas implements Servicios {
 
         try (FileOutputStream archivo = new FileOutputStream("personas.bin", true);
              ObjectOutputStream escritura = archivoExiste
-                     ? new AppendableObjectOutputStream(archivo) // Usa la versión sin encabezado
-                     : new ObjectOutputStream(archivo)) { // Usa la versión normal si el archivo es nuevo
+                     ? new AppendableObjectOutputStream(archivo)
+                     : new ObjectOutputStream(archivo)) {
             escritura.writeObject(persona);
             System.out.println("Persona agregada exitosamente al listado!");
         } catch (IOException error) {

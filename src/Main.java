@@ -19,7 +19,7 @@ public class Main {
         InscripcionesPersonas inscripcionesPersonas = new InscripcionesPersonas();
         inscripcionesPersonas.cargarDatos();
 
-        //inscripcionesPersonas.inscribir(new Persona(4, "Camilo", "Acosta", "acosta@gmail.com"));
+        inscripcionesPersonas.inscribir(new Persona(5, "Johan", "Arango", "arango@gmail.com"));
 
         System.out.println(inscripcionesPersonas.imprimirListado());
     }
