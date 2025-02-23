@@ -40,6 +40,10 @@ public class Estudiante extends Persona {
         this.promedio = promedio;
     }
 
+    public Programa getPrograma() { return programa; }
+
+    public void setPrograma(Programa programa) { this.programa = programa; }
+
     @Override
     public String toString() {
         return "Estudiante{" +

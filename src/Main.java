@@ -19,9 +19,10 @@ public class Main {
         InscripcionesPersonas inscripcionesPersonas = new InscripcionesPersonas();
         inscripcionesPersonas.cargarDatos();
 
-        inscripcionesPersonas.inscribir(new Persona(5, "Johan", "Arango", "arango@gmail.com"));
+        //inscripcionesPersonas.inscribir(new Persona(6, "Jose", "Cardenas", "jose@gmail.com"));
 
         System.out.println(inscripcionesPersonas.imprimirListado());
+        System.out.println("Cantidad de elementos en el listado de Personas:" + inscripcionesPersonas.cantidadActual());
     }
 }
 

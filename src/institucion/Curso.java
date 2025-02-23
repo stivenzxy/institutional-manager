@@ -1,6 +1,8 @@
 package institucion;
 
-public class Curso {
+import java.io.Serializable;
+
+public class Curso implements Serializable {
     private int ID;
     private String nombre;
     private Programa programa;

@@ -3,7 +3,9 @@ package relaciones;
 import entidades.Profesor;
 import institucion.Curso;
 
-public class CursoProfesor {
+import java.io.Serializable;
+
+public class CursoProfesor implements Serializable {
     private Profesor profesor;
     private int anio;
     private int semestre;

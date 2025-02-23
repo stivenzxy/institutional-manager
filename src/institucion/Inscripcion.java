@@ -3,17 +3,25 @@ package institucion;
 import entidades.Estudiante;
 
 public class Inscripcion {
+    private double ID;
     private Curso curso;
     private int anio;
     private int semestre;
     private Estudiante estudiante;
-
 
     public Inscripcion(Curso curso, int anio, int semestre, Estudiante estudiante) {
         this.curso = curso;
         this.anio = anio;
         this.semestre = semestre;
         this.estudiante = estudiante;
+    }
+
+    public double getID() {
+        return ID;
+    }
+
+    public void setID(double ID) {
+        this.ID = ID;
     }
 
     public Curso getCurso() {

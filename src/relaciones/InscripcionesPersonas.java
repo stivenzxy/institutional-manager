@@ -2,6 +2,7 @@ package relaciones;
 
 import Servicios.Servicios;
 import entidades.Persona;
+import utils.AppendableObjectOutputStream;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ public class InscripcionesPersonas implements Servicios {
     }
 
     public void inscribir(Persona persona) {
-        listado.add(persona); // Agregar persona a la lista en memoria
+        listado.add(persona);
         guardarInformacion(persona);
     }
 
@@ -53,35 +54,24 @@ public class InscripcionesPersonas implements Servicios {
 
         if (!archivo.exists() || archivo.length() == 0) {
             System.out.println("El archivo no existe o está vacío. No se puede cargar la Información.");
-            return; // Termina la ejecución para evitar errores
+            return;
         }
 
         try (ObjectInputStream lectura = new ObjectInputStream(new FileInputStream(archivo))) {
             listado.clear();
-            while (true) { // Leer hasta que se alcance el final del archivo
+            while (true) {
                 try {
                     Object obj = lectura.readObject();
                     if (obj instanceof Persona) {
                         listado.add((Persona) obj);
                     }
                 } catch (EOFException e) {
-                    break; // Fin del archivo alcanzado, salir del bucle
+                    break;
                 }
             }
             System.out.println("Datos cargados exitosamente!");
         } catch (IOException | ClassNotFoundException error) {
             error.printStackTrace(System.out);
-        }
-    }
-
-    private static class AppendableObjectOutputStream extends ObjectOutputStream {
-        public AppendableObjectOutputStream(OutputStream out) throws IOException {
-            super(out);
-        }
-
-        @Override
-        protected void writeStreamHeader() throws IOException {
-            reset();
         }
     }
 
@@ -92,7 +82,7 @@ public class InscripcionesPersonas implements Servicios {
 
     @Override
     public int cantidadActual() {
-        return 0;
+        return listado.size();
     }
 
     @Override

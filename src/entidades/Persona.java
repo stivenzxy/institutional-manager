@@ -53,6 +53,6 @@ public class Persona implements Serializable { // Serializable convierte la clas
         return "{ \"ID\": " + ID +
                 ", \"Nombre\": \"" + nombres +
                 "\", \"Apellidos\": \"" + apellidos +
-                "\", \"Email\": \"" + email + "\" }";
+                "\", \"Email\": \"" + email + "\" }\n";
     }
 }
