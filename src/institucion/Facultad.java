@@ -2,7 +2,9 @@ package institucion;
 
 import entidades.Persona;
 
-public class Facultad {
+import java.io.Serializable;
+
+public class Facultad implements Serializable {
     private double ID;
     private String nombre;
     private Persona decano;

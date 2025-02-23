@@ -11,7 +11,7 @@ import java.util.List;
 public class CursosProfesores implements Servicios {
     private List<CursoProfesor> listado;
 
-    public CursosProfesores(List<CursoProfesor> listado) {
+    public CursosProfesores() {
         this.listado = new ArrayList<>();
     }
 

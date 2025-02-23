@@ -52,11 +52,9 @@ public class CursoProfesor implements Serializable {
 
     @Override
     public String toString() {
-        return "cursoProfesor{" +
-                "profesor=" + profesor.getNombres() + " " + profesor.getApellidos() +
-                ", anio=" + anio +
-                ", semestre=" + semestre +
-                ", curso=" + curso.getNombre() +
-                '}';
+        return "{ \"Profesor\": \"" + profesor.getNombres() + " " + profesor.getApellidos() +
+                "\", \"Año\": " + anio +
+                ", \"Semestre\": " + semestre +
+                ", \"Curso\": \"" + curso.getNombre() + "\" }\n";
     }
 }

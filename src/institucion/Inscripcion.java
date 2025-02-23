@@ -2,7 +2,9 @@ package institucion;
 
 import entidades.Estudiante;
 
-public class Inscripcion {
+import java.io.Serializable;
+
+public class Inscripcion implements Serializable {
     private double ID;
     private Curso curso;
     private int anio;
