@@ -73,6 +73,26 @@ public class InscripcionesPersonas implements Servicios {
             error.printStackTrace(System.out);
         }
     }
+    public boolean eliminar(double id) {
+        if (listado == null || listado.isEmpty()) {
+            System.out.println("La lista de personas está vacía o no ha sido inicializada.");
+            return false;
+        }
+
+        // Buscar la persona en la lista
+        for (Persona persona : listado) {
+            if (persona.getID() == id) { // Comparar el ID de la persona con el proporcionado
+                listado.remove(persona); // Eliminar la persona de la lista
+                System.out.println("Persona con ID " + id + " eliminada exitosamente.");
+                return true;
+            }
+        }
+
+        // Si no se encuentra la persona
+        System.out.println("No se encontró ninguna persona con el ID " + id + ".");
+        return false;
+    }
+
 
     private static class AppendableObjectOutputStream extends ObjectOutputStream {
         public AppendableObjectOutputStream(OutputStream out) throws IOException {

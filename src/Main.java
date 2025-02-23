@@ -19,9 +19,19 @@ public class Main {
         InscripcionesPersonas inscripcionesPersonas = new InscripcionesPersonas();
         inscripcionesPersonas.cargarDatos();
 
-        inscripcionesPersonas.inscribir(new Persona(5, "Johan", "Arango", "arango@gmail.com"));
+        /* inscripcionesPersonas.inscribir(new Persona(5, "Johan", "Arango", "arango@gmail.com"));
+        inscripcionesPersonas.inscribir(new Persona(2.0, "Ana", "Gómez", "ana@example.com"));
+        inscripcionesPersonas.inscribir(new Persona(3.0, "Carlos", "López", "carlos@example.com"));
+        System.out.println("Lista de personas antes de eliminar:");
+        System.out.println(inscripcionesPersonas.imprimirListado()); */
+        // Eliminar una persona con ID 2.0
+        inscripcionesPersonas.eliminar(3.0);
 
+
+        // Mostrar la lista de personas después de eliminar
+        System.out.println("Lista de personas después de eliminar:");
         System.out.println(inscripcionesPersonas.imprimirListado());
+
     }
 }
 
