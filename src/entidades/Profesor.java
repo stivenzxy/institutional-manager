@@ -10,9 +10,7 @@ public class Profesor extends Persona implements Serializable {
         this.tipoContrato = tipoContrato;
     }
 
-    public String getTipoContrato() {
-        return tipoContrato;
-    }
+    public String getTipoContrato() { return tipoContrato;}
 
     public void setTipoContrato(String tipoContrato) {
         this.tipoContrato = tipoContrato;

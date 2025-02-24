@@ -38,7 +38,7 @@ public class CursosProfesores implements Servicios {
         try (FileOutputStream archivo = new FileOutputStream("cursosProfesores.bin", true);
              ObjectOutputStream escritura = archivoExiste ? new AppendableObjectOutputStream(archivo) : new ObjectOutputStream(archivo)) {
             escritura.writeObject(cursoProfesor);
-            System.out.println("El curso y su información respectiva se han guardado correctamente.");
+            System.out.println("El curso #" + cantidadActual()  + " se ha agregado exitosamente al listado!");
         } catch (IOException error) {
             error.printStackTrace(System.out);
         }
@@ -48,7 +48,7 @@ public class CursosProfesores implements Servicios {
         File archivo = new File("cursosProfesores.bin");
 
         if (!archivo.exists() || archivo.length() == 0) {
-            System.out.println("El archivo no existe o está vacío. No se puede cargar la Información.");
+            System.out.println("El archivo 'cursosProfesores.bin' no existe o está vacío. No se puede cargar la Información.");
             return;
         }
 
@@ -64,7 +64,7 @@ public class CursosProfesores implements Servicios {
                     break;
                 }
             }
-            System.out.println("Datos cargados exitosamente!");
+            System.out.println("Datos del archivo 'cursosProfesores' cargados exitosamente!");
         } catch (IOException | ClassNotFoundException error) {
             error.printStackTrace(System.out);
         }

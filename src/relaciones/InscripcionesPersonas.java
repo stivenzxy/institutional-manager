@@ -28,24 +28,71 @@ public class InscripcionesPersonas implements Servicios {
         guardarInformacion(persona);
     }
 
-    public void eliminar(Persona persona) {}
-    public void actualizar(Persona persona) {}
-
-    public void guardarInformacion(Persona persona) {
-        if(persona == null) {
-            throw new IllegalArgumentException("Error!. No se suministró correctamente la información de la persona.");
+    public void actualizar(Persona persona) {
+        if (persona == null) {
+            System.out.println("Error: La persona que intenta actualizar no existe.");
+            return;
         }
 
-        boolean archivoExiste = new File("personas.bin").exists();
+        cargarDatos();
+        boolean actualizado = false;
 
-        try (FileOutputStream archivo = new FileOutputStream("personas.bin", true);
+        for (int i = 0; i < listado.size(); i++) {
+            if (listado.get(i).getID() == persona.getID()) {
+                listado.set(i, persona);
+                actualizado = true;
+                break;
+            }
+        }
+
+        if (actualizado) {
+            guardarInformacion(null);
+            System.out.println("Información de " + persona.getNombres() + " " + persona.getApellidos() + " actualizada correctamente.");
+        } else {
+            System.out.println("No se encontró la persona en el listado.");
+        }
+    }
+
+    public void eliminar(Persona persona) {
+        if (persona == null) {
+            System.out.println("Error: La persona que intenta eliminar de la lista no existe.");
+            return;
+        }
+
+        cargarDatos();
+
+        if (listado.removeIf(p -> p.getID() == persona.getID())) {
+            System.out.println(persona.getNombres() + " " + persona.getApellidos() +
+                    " se ha eliminado correctamente de la lista.\n");
+            guardarInformacion(null);
+        } else {
+            System.out.println("No se encontró la persona en el listado.");
+        }
+    }
+
+    public void guardarInformacion(Persona persona) {
+        File archivo = new File("personas.bin");
+
+        if (persona == null) { // Si el objeto es 'null' se guarda la lista completa en el archivo
+            try (ObjectOutputStream listadoCompleto = new ObjectOutputStream(new FileOutputStream(archivo))) {
+                for (Persona p : listado) {
+                    listadoCompleto.writeObject(p);
+                }
+            } catch (IOException error) {
+                System.out.println("Error al escribir la lista en el archivo: " + error.getMessage());
+            }
+            return;
+        }
+        boolean archivoExiste = archivo.exists();
+
+        try (FileOutputStream archivoSalida = new FileOutputStream(archivo, true);
              ObjectOutputStream escritura = archivoExiste
-                     ? new AppendableObjectOutputStream(archivo)
-                     : new ObjectOutputStream(archivo)) {
+                     ? new AppendableObjectOutputStream(archivoSalida)
+                     : new ObjectOutputStream(archivoSalida)) {
             escritura.writeObject(persona);
-            System.out.println("Persona agregada exitosamente al listado!");
+            System.out.println("Persona #" + cantidadActual()  + " agregada exitosamente al listado!");
         } catch (IOException error) {
-            error.printStackTrace(System.out);
+            System.out.println("Error al agregar persona al archivo: " + error.getMessage());
         }
     }
 
@@ -53,7 +100,7 @@ public class InscripcionesPersonas implements Servicios {
         File archivo = new File("personas.bin");
 
         if (!archivo.exists() || archivo.length() == 0) {
-            System.out.println("El archivo no existe o está vacío. No se puede cargar la Información.");
+            System.out.println("El archivo 'Personas.bin' no existe o está vacío. No se puede cargar la Información.");
             return;
         }
 
@@ -69,45 +116,11 @@ public class InscripcionesPersonas implements Servicios {
                     break;
                 }
             }
-            System.out.println("Datos cargados exitosamente!");
+            System.out.println("Datos del archivo 'Personas' cargados exitosamente!");
         } catch (IOException | ClassNotFoundException error) {
             error.printStackTrace(System.out);
         }
     }
-    public boolean eliminar(double id) {
-        // Cargar todas las personas desde el archivo
-        cargarDatos(); // Usamos el método cargarDatos() que ya existe en tu clase
-
-        if (listado == null || listado.isEmpty()) {
-            System.out.println("No hay personas en el archivo.");
-            return false;
-        }
-
-        // Buscar y eliminar la persona con el ID especificado
-        boolean eliminado = listado.removeIf(persona -> persona.getID() == id);
-
-        if (eliminado) {
-            System.out.println("Persona con ID " + id + " eliminada exitosamente.");
-            guardarInformacionActualizada(); // Guardar la lista actualizada en el archivo
-            return true;
-        } else {
-            System.out.println("No se encontró ninguna persona con el ID " + id + ".");
-            return false;
-        }
-    }
-
-    // Método para guardar la lista actualizada en el archivo
-    private void guardarInformacionActualizada() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("personas.bin"))) {
-            for (Persona persona : listado) {
-                oos.writeObject(persona);
-            }
-            System.out.println("Lista de personas guardada exitosamente en el archivo.");
-        } catch (IOException e) {
-            System.out.println("Error al guardar personas en el archivo: " + e.getMessage());
-        }
-    }
-
 
     @Override
     public String imprimirPosicion(String posicion) {
@@ -115,9 +128,7 @@ public class InscripcionesPersonas implements Servicios {
     }
 
     @Override
-    public int cantidadActual() {
-        return listado.size();
-    }
+    public int cantidadActual() { return listado.size(); }
 
     @Override
     public List<String> imprimirListado() {

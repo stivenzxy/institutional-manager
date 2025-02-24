@@ -55,6 +55,7 @@ public class CursoProfesor implements Serializable {
         return "{ \"Profesor\": \"" + profesor.getNombres() + " " + profesor.getApellidos() +
                 "\", \"Año\": " + anio +
                 ", \"Semestre\": " + semestre +
-                ", \"Curso\": \"" + curso.getNombre() + "\" }\n";
+                ", \"Curso\": \"" + curso.getNombre() +
+                ", \"Activo\": " + (curso.isActivo() ? "Si" : "No") + "\" }\n";
     }
 }

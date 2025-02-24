@@ -11,7 +11,8 @@ public class Inscripcion implements Serializable {
     private int semestre;
     private Estudiante estudiante;
 
-    public Inscripcion(Curso curso, int anio, int semestre, Estudiante estudiante) {
+    public Inscripcion(double ID,Curso curso, int anio, int semestre, Estudiante estudiante) {
+        this.ID = ID;
         this.curso = curso;
         this.anio = anio;
         this.semestre = semestre;
@@ -60,11 +61,14 @@ public class Inscripcion implements Serializable {
 
     @Override
     public String toString() {
-        return "Inscripcion{" +
-                "curso=" + curso +
-                ", anio=" + anio +
-                ", semestre=" + semestre +
-                ", estudiante=" + estudiante.getNombres() + " " + estudiante.getApellidos() +
-                '}';
+        return "{ " +
+                "\"ID\": \"" + ID + "\", " +
+                "\"curso\": \"" + curso.getNombre() + "\", " +
+                "\"anio\": " + anio + ", " +
+                "\"semestre\": " + semestre + ", " +
+                "\"estudiante\": { " +
+                "\"nombres\": \"" + estudiante.getNombres() + "\", " +
+                "\"apellidos\": \"" + estudiante.getApellidos() + "\"" +
+                " }" + " }\n";
     }
 }
