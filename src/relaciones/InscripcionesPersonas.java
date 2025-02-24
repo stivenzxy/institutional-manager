@@ -74,6 +74,40 @@ public class InscripcionesPersonas implements Servicios {
             error.printStackTrace(System.out);
         }
     }
+    public boolean eliminar(double id) {
+        // Cargar todas las personas desde el archivo
+        cargarDatos(); // Usamos el método cargarDatos() que ya existe en tu clase
+
+        if (listado == null || listado.isEmpty()) {
+            System.out.println("No hay personas en el archivo.");
+            return false;
+        }
+
+        // Buscar y eliminar la persona con el ID especificado
+        boolean eliminado = listado.removeIf(persona -> persona.getID() == id);
+
+        if (eliminado) {
+            System.out.println("Persona con ID " + id + " eliminada exitosamente.");
+            guardarInformacionActualizada(); // Guardar la lista actualizada en el archivo
+            return true;
+        } else {
+            System.out.println("No se encontró ninguna persona con el ID " + id + ".");
+            return false;
+        }
+    }
+
+    // Método para guardar la lista actualizada en el archivo
+    private void guardarInformacionActualizada() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("personas.bin"))) {
+            for (Persona persona : listado) {
+                oos.writeObject(persona);
+            }
+            System.out.println("Lista de personas guardada exitosamente en el archivo.");
+        } catch (IOException e) {
+            System.out.println("Error al guardar personas en el archivo: " + e.getMessage());
+        }
+    }
+
 
     @Override
     public String imprimirPosicion(String posicion) {

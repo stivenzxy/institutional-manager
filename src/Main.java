@@ -22,7 +22,13 @@ public class Main {
         InscripcionesPersonas inscripcionesPersonas = new InscripcionesPersonas();
         inscripcionesPersonas.cargarDatos();
 
-        //inscripcionesPersonas.inscribir(new Persona(6, "Jose", "Cardenas", "jose@gmail.com"));
+        /* inscripcionesPersonas.inscribir(new Persona(5, "Johan", "Arango", "arango@gmail.com"));
+        inscripcionesPersonas.inscribir(new Persona(2.0, "Ana", "Gómez", "ana@example.com"));
+        inscripcionesPersonas.inscribir(new Persona(3.0, "Carlos", "López", "carlos@example.com")); */
+        System.out.println("Lista de personas antes de eliminar:");
+        System.out.println(inscripcionesPersonas.imprimirListado());
+        // Eliminar una persona con ID 5.0
+        inscripcionesPersonas.eliminar(5.0);
 
         System.out.println(inscripcionesPersonas.imprimirListado());
         System.out.println("Cantidad de elementos en el listado de Personas:" + inscripcionesPersonas.cantidadActual());
