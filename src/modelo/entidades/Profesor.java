@@ -1,4 +1,4 @@
-package entidades;
+package modelo.entidades;
 
 import java.io.Serializable;
 

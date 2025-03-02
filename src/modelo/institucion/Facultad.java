@@ -1,6 +1,6 @@
-package institucion;
+package modelo.institucion;
 
-import entidades.Persona;
+import modelo.entidades.Persona;
 
 import java.io.Serializable;
 

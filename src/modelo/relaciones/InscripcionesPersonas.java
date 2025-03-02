@@ -1,7 +1,7 @@
-package relaciones;
+package modelo.relaciones;
 
-import Servicios.Servicios;
-import entidades.Persona;
+import servicios.Servicios;
+import modelo.entidades.Persona;
 import utils.AppendableObjectOutputStream;
 
 import java.util.ArrayList;

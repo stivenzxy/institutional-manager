@@ -1,14 +1,8 @@
-import entidades.Estudiante;
-import entidades.Persona;
-import entidades.Profesor;
-import institucion.Curso;
-import institucion.Facultad;
-import institucion.Inscripcion;
-import institucion.Programa;
-import relaciones.CursoProfesor;
-import relaciones.CursosInscritos;
-import relaciones.CursosProfesores;
-import relaciones.InscripcionesPersonas;
+import vista.GestionPersonasGUI;
+import controlador.ControladorPersonas;
+import modelo.relaciones.InscripcionesPersonas;
+
+import javax.swing.*;
 
 /**
  * @author Jesus Estiven Peréz Torres - 160004725
@@ -17,7 +11,7 @@ import relaciones.InscripcionesPersonas;
 
 public class Main {
     public static void main(String[] args) {
-        Persona persona1 = new Persona(1, "Jhorman", "Carrillo", "alexander@gmail.com");
+       /* Persona persona1 = new Persona(1, "Jhorman", "Carrillo", "alexander@gmail.com");
         Persona persona2 = new Persona(2, "Ana", "Gómez", "ana@gmail.com");
 
         Profesor profesor1 = new Profesor(101010, "Roger", "Calderon", "rcalderon@unillanos.edu.co", "Catedrático");
@@ -75,7 +69,15 @@ public class Main {
         cursosInscritos.actualizar(inscripcion2Actualizada);
 
         System.out.println(cursosInscritos.imprimirListado());
-        System.out.println("Numero de inscripciones activas:" + cursosInscritos.cantidadActual() + "\n");
+        System.out.println("Numero de inscripciones activas:" + cursosInscritos.cantidadActual() + "\n"); */
+
+        SwingUtilities.invokeLater(() -> {
+            GestionPersonasGUI vista = new GestionPersonasGUI();
+            InscripcionesPersonas modelo = new InscripcionesPersonas();
+            new ControladorPersonas(vista, modelo);
+            vista.setVisible(true);
+        });
+        
     }
 }
 

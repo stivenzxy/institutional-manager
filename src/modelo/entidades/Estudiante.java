@@ -1,6 +1,6 @@
-package entidades;
+package modelo.entidades;
 
-import institucion.Programa;
+import modelo.institucion.Programa;
 
 public class Estudiante extends Persona {
     private double codigo;

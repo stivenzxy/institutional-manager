@@ -1,4 +1,4 @@
-package institucion;
+package modelo.institucion;
 
 import java.io.Serializable;
 

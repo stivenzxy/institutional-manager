@@ -1,7 +1,7 @@
-package relaciones;
+package modelo.relaciones;
 
-import entidades.Profesor;
-import institucion.Curso;
+import modelo.entidades.Profesor;
+import modelo.institucion.Curso;
 
 import java.io.Serializable;
 

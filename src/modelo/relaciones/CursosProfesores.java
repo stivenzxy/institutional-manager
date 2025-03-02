@@ -1,7 +1,6 @@
-package relaciones;
+package modelo.relaciones;
 
-import Servicios.Servicios;
-import entidades.Persona;
+import servicios.Servicios;
 import utils.AppendableObjectOutputStream;
 
 import java.io.*;

@@ -1,12 +1,10 @@
-package relaciones;
+package modelo.relaciones;
 
-import Servicios.Servicios;
-import entidades.Persona;
-import institucion.Inscripcion;
+import servicios.Servicios;
+import modelo.institucion.Inscripcion;
 import utils.AppendableObjectOutputStream;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 

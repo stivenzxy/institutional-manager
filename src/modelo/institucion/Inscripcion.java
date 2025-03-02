@@ -1,6 +1,6 @@
-package institucion;
+package modelo.institucion;
 
-import entidades.Estudiante;
+import modelo.entidades.Estudiante;
 
 import java.io.Serializable;
 
