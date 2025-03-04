@@ -17,6 +17,11 @@ public class Programa implements Serializable {
         this.facultad = facultad;
     }
 
+    public Programa(double id, String nombre) {
+        this.ID = id;
+        this.nombre = nombre;
+    }
+
     public double getID() {
         return ID;
     }
@@ -59,12 +64,6 @@ public class Programa implements Serializable {
 
     @Override
     public String toString() {
-        return "Programa{" +
-                "ID=" + ID +
-                ", nombre='" + nombre + '\'' +
-                ", duracion=" + duracion +
-                ", registro='" + registro + '\'' +
-                ", facultad=" + facultad +
-                '}';
+        return nombre;
     }
 }

@@ -1,5 +1,8 @@
 package modelo.relaciones;
 
+import DAO.PersonaDAO;
+import modelo.entidades.Estudiante;
+import modelo.entidades.Profesor;
 import servicios.Servicios;
 import modelo.entidades.Persona;
 import utils.AppendableObjectOutputStream;
@@ -10,9 +13,11 @@ import java.io.*;
 
 public class InscripcionesPersonas implements Servicios {
     private List<Persona> listado;
+    private final PersonaDAO personaDAO;
 
     public InscripcionesPersonas() {
         this.listado = new ArrayList<>();
+        this.personaDAO = new PersonaDAO();
     }
 
     public List<Persona> getPersonas() {
@@ -26,6 +31,14 @@ public class InscripcionesPersonas implements Servicios {
     public void inscribir(Persona persona) {
         listado.add(persona);
         guardarInformacion(persona);
+
+        if (persona instanceof Estudiante estudiante) {
+            personaDAO.insertarEstudiante(estudiante);
+        } else if (persona instanceof Profesor profesor) {
+            personaDAO.insertarProfesor(profesor);
+        } else {
+            personaDAO.insertarPersona(persona);
+        }
     }
 
     public void actualizar(Persona persona) {
@@ -34,7 +47,7 @@ public class InscripcionesPersonas implements Servicios {
             return;
         }
 
-        cargarDatos();
+        cargarDatosDB();
         boolean actualizado = false;
 
         for (int i = 0; i < listado.size(); i++) {
@@ -47,6 +60,13 @@ public class InscripcionesPersonas implements Servicios {
 
         if (actualizado) {
             guardarInformacion(null);
+            if (persona instanceof Estudiante estudiante) {
+                personaDAO.actualizarEstudiante(estudiante);
+            } else if (persona instanceof Profesor profesor) {
+                personaDAO.actualizarProfesor(profesor);
+            } else {
+                personaDAO.actualizarPersona(persona);
+            }
             System.out.println("Información de " + persona.getNombres() + " " + persona.getApellidos() + " actualizada correctamente.");
         } else {
             System.out.println("No se encontró la persona en el listado.");
@@ -59,7 +79,8 @@ public class InscripcionesPersonas implements Servicios {
             return;
         }
 
-        cargarDatos();
+        cargarDatosDB();
+        personaDAO.eliminarPersona(persona.getID());
 
         if (listado.removeIf(p -> p.getID() == persona.getID())) {
             System.out.println(persona.getNombres() + " " + persona.getApellidos() +
@@ -119,6 +140,19 @@ public class InscripcionesPersonas implements Servicios {
             System.out.println("Datos del archivo 'Personas' cargados exitosamente!");
         } catch (IOException | ClassNotFoundException error) {
             error.printStackTrace(System.out);
+        }
+    }
+
+    public void cargarDatosDB() {
+        listado.clear();
+
+        List<Persona> personas = personaDAO.obtenerTodasLasPersonas();
+        listado.addAll(personas);
+
+        if (listado.isEmpty()) {
+            System.out.println("No hay datos en la base de datos.");
+        } else {
+            System.out.println("Datos de la base de datos cargados exitosamente!");
         }
     }
 
