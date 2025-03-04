@@ -1,14 +1,16 @@
 package modelo;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import DAO.ProgramaDAO;
+
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ConexionDB {
     private static final String URL = "jdbc:h2:./database/institucion";
     private static final String USUARIO = "sa";
     private static final String PASSWORD = "";
+    private static final Logger logger = Logger.getLogger(ConexionDB.class.getName());
 
     private static Connection conexion;
 
@@ -104,6 +106,15 @@ public class ConexionDB {
                     FOREIGN KEY (curso_id) REFERENCES cursos(id) ON DELETE RESTRICT,
                     FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id) ON DELETE CASCADE
                 )
+                """,
+                """
+                   CREATE TABLE IF NOT EXISTS curso_profesor (
+                    curso_id DOUBLE NOT NULL,
+                    profesor_id DOUBLE NOT NULL,
+                    PRIMARY KEY (curso_id, profesor_id),
+                    FOREIGN KEY (curso_id) REFERENCES cursos(id) ON DELETE CASCADE,
+                    FOREIGN KEY (profesor_id) REFERENCES profesores(id) ON DELETE CASCADE
+                )
                 """
         };
 
@@ -114,6 +125,18 @@ public class ConexionDB {
             System.out.println("Base de datos inicializada correctamente.");
         } catch (SQLException exception) {
             System.err.println("Error al inicializar la base de datos: " + exception.getMessage());
+        }
+    }
+
+    public static void ejecutarSentenciaParametrizada(String sql, Object... valores) {
+        try (Connection conn = ConexionDB.getConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            for (int i = 0; i < valores.length; i++) {
+                pstmt.setObject(i + 1, valores[i]);
+            }
+            pstmt.executeUpdate();
+        } catch (SQLException exception) {
+            logger.log(Level.SEVERE, "Error al ejecutar SQL con parámetros: " + sql, exception);
         }
     }
 }

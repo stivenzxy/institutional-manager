@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static modelo.ConexionDB.ejecutarSentenciaParametrizada;
+
 public class PersonaDAO {
     private static final Logger logger = Logger.getLogger(PersonaDAO.class.getName());
     public PersonaDAO() {}
@@ -103,27 +105,5 @@ public class PersonaDAO {
             logger.log(Level.SEVERE, "Error al obtener todas las personas", exception);
         }
         return personas;
-    }
-
-
-    private void ejecutarSentenciaSql(String sql) {
-        try (Connection conn = ConexionDB.getConexion();
-             Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
-        } catch (SQLException exception) {
-            logger.log(Level.SEVERE, "Error al ejecutar SQL: " + sql, exception);
-        }
-    }
-
-    private void ejecutarSentenciaParametrizada(String sql, Object... valores) {
-        try (Connection conn = ConexionDB.getConexion();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            for (int i = 0; i < valores.length; i++) {
-                pstmt.setObject(i + 1, valores[i]);
-            }
-            pstmt.executeUpdate();
-        } catch (SQLException exception) {
-            logger.log(Level.SEVERE, "Error al ejecutar SQL con parámetros: " + sql, exception);
-        }
     }
 }

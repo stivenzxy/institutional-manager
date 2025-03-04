@@ -46,12 +46,6 @@ public class Estudiante extends Persona {
 
     @Override
     public String toString() {
-        return "Estudiante{" +
-                super.toString() +
-                "codigo=" + codigo +
-                ", activo=" + (activo ? "Si" : "No") +
-                ", promedio=" + promedio +
-                ", programa=" + programa.getNombre() +
-                '}';
+        return getNombres() + " " + getApellidos();
     }
 }

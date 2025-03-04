@@ -27,6 +27,7 @@ public class ControladorPersonas {
         this.vista.getTablaPersonas().getSelectionModel().addListSelectionListener(e -> seleccionarPersona());
 
         this.actualizarCampos();
+        this.cargarPersonas();
         this.vista.getCmbTipoPersona().addActionListener(e -> actualizarCampos());
     }
 

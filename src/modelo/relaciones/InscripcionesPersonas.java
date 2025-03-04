@@ -6,6 +6,7 @@ import modelo.entidades.Profesor;
 import servicios.Servicios;
 import modelo.entidades.Persona;
 import utils.AppendableObjectOutputStream;
+import vista.GestionCursosEstudiantesGUI;
 
 import java.util.ArrayList;
 import java.util.List;

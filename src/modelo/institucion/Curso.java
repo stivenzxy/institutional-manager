@@ -15,6 +15,11 @@ public class Curso implements Serializable {
         this.activo = activo;
     }
 
+    public Curso(int id, String nombre) {
+        this.ID = id;
+        this.nombre = nombre;
+    }
+
     public int getID() {
         return ID;
     }
@@ -47,11 +52,6 @@ public class Curso implements Serializable {
 
     @Override
     public String toString() {
-        return "Curso{" +
-                "ID=" + ID +
-                ", nombre='" + nombre +
-                ", programa=" + programa +
-                ", activo=" + (activo ? "Si" : "No")+
-                '}';
+        return nombre;
     }
 }

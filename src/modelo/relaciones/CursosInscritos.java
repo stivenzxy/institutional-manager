@@ -1,5 +1,7 @@
 package modelo.relaciones;
 
+import DAO.InscripcionDAO;
+import modelo.entidades.Persona;
 import servicios.Servicios;
 import modelo.institucion.Inscripcion;
 import utils.AppendableObjectOutputStream;
@@ -10,8 +12,12 @@ import java.util.List;
 
 public class CursosInscritos implements Servicios {
     private List<Inscripcion> listado;
+    private final InscripcionDAO inscripcionDAO;
 
-    public CursosInscritos() { this.listado = new ArrayList<>(); }
+    public CursosInscritos() {
+        this.inscripcionDAO = new InscripcionDAO();
+        this.listado = new ArrayList<>();
+    }
 
     public List<Inscripcion> getListado() {
         return listado;
@@ -23,8 +29,10 @@ public class CursosInscritos implements Servicios {
 
     public void inscribir(Inscripcion inscripcion) {
         listado.add(inscripcion);
+        inscripcionDAO.insertarInscripcion(inscripcion);
         guardarInformacion(inscripcion);
     }
+
     public void actualizar(Inscripcion inscripcion) {
         if (inscripcion == null) {
             System.out.println("Error: La inscripcion que intenta actualizar no existe.");
@@ -32,7 +40,7 @@ public class CursosInscritos implements Servicios {
         }
 
         boolean actualizado = false;
-        cargarDatos();
+        cargarDatosDB();
 
         for (int i = 0; i < listado.size(); i++) {
             if (listado.get(i).getID() == inscripcion.getID()) {
@@ -43,6 +51,7 @@ public class CursosInscritos implements Servicios {
         }
 
         if (actualizado) {
+            inscripcionDAO.actualizarInscripcion(inscripcion);
             guardarInformacion(null);
             System.out.println("La inscripción " + inscripcion.getID() + " se ha actualizado correctamente.");
         } else {
@@ -56,10 +65,11 @@ public class CursosInscritos implements Servicios {
             return;
         }
 
-        cargarDatos();
+        cargarDatosDB();
 
         if (listado.removeIf(i -> i.getID() == inscripcion.getID())) {
             System.out.println("El estudiante " + inscripcion.getEstudiante().getNombres() + " ha cancelado su inscripción al curso " + inscripcion.getCurso().getNombre() + ".");
+            inscripcionDAO.eliminarInscripcion(inscripcion);
             guardarInformacion(null);
         } else {
             System.out.println("No se encontró la persona en el listado.");
@@ -116,6 +126,19 @@ public class CursosInscritos implements Servicios {
             System.out.println("Datos del archivo 'Inscripciones' cargados exitosamente!");
         } catch (IOException | ClassNotFoundException error) {
             error.printStackTrace(System.out);
+        }
+    }
+
+    public void cargarDatosDB() {
+        listado.clear();
+
+        List<Inscripcion> inscripciones = inscripcionDAO.obtenerTodasLasInscripciones();
+        listado.addAll(inscripciones);
+
+        if (listado.isEmpty()) {
+            System.out.println("No hay datos en la base de datos.");
+        } else {
+            System.out.println("Datos de la base de datos cargados exitosamente!");
         }
     }
 

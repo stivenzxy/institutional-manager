@@ -1,4 +1,10 @@
+import controlador.ControladorCursosEstudiantes;
+import controlador.ControladorCursosProfesores;
 import modelo.ConexionDB;
+import modelo.relaciones.CursosInscritos;
+import modelo.relaciones.CursosProfesores;
+import vista.GestionCursosEstudiantesGUI;
+import vista.GestionCursosProfesoresGUI;
 import vista.GestionPersonasGUI;
 import controlador.ControladorPersonas;
 import modelo.relaciones.InscripcionesPersonas;
@@ -23,9 +29,17 @@ public class Main {
             }));
 
             GestionPersonasGUI gestionPersonasGUI = (GestionPersonasGUI) ventanaPrincipal.getTabbedPane().getComponentAt(0);
+            GestionCursosProfesoresGUI gestionCursosProfesoresGUI = (GestionCursosProfesoresGUI) ventanaPrincipal.getTabbedPane().getComponentAt(1);
+            GestionCursosEstudiantesGUI gestionCursosEstudiantesGUI = (GestionCursosEstudiantesGUI) ventanaPrincipal.getTabbedPane().getComponentAt(2);
 
-            InscripcionesPersonas modelo = new InscripcionesPersonas();
-            new ControladorPersonas(gestionPersonasGUI, modelo);
+            InscripcionesPersonas modeloPersonas = new InscripcionesPersonas();
+            new ControladorPersonas(gestionPersonasGUI, modeloPersonas);
+
+            CursosProfesores modeloCursosProfesores = new CursosProfesores();
+            new ControladorCursosProfesores(gestionCursosProfesoresGUI, modeloCursosProfesores);
+
+            CursosInscritos modeloCursosInscritos = new CursosInscritos();
+            new ControladorCursosEstudiantes(gestionCursosEstudiantesGUI, modeloCursosInscritos);
 
             ventanaPrincipal.setVisible(true);
         });

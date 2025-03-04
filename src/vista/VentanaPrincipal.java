@@ -14,11 +14,9 @@ public class VentanaPrincipal extends JFrame {
 
         tabbedPane = new JTabbedPane();
 
-        // Agregar el tab de "Gestión de Personas"
         tabbedPane.addTab("Gestión de Personas", new GestionPersonasGUI());
-
-        // Aquí podrías agregar más pestañas en el futuro
-        tabbedPane.addTab("Otra Sección", new JPanel()); // Ejemplo de otra pestaña vacía
+        tabbedPane.addTab("Gestión de Cursos y Profesores", new GestionCursosProfesoresGUI());
+        tabbedPane.addTab("Inscripción de Cursos", new GestionCursosEstudiantesGUI());
 
         add(tabbedPane);
     }

@@ -1,5 +1,7 @@
 package modelo.relaciones;
 
+import DAO.CursoProfesorDAO;
+import modelo.entidades.Persona;
 import servicios.Servicios;
 import utils.AppendableObjectOutputStream;
 
@@ -9,9 +11,11 @@ import java.util.List;
 
 public class CursosProfesores implements Servicios {
     private List<CursoProfesor> listado;
+    private final CursoProfesorDAO cursoProfesorDAO;
 
     public CursosProfesores() {
         this.listado = new ArrayList<>();
+        this.cursoProfesorDAO = new CursoProfesorDAO();
     }
 
     public List<CursoProfesor> getListado() {
@@ -22,9 +26,16 @@ public class CursosProfesores implements Servicios {
         this.listado = listado;
     }
 
-    public void inscribir(CursoProfesor cursoProfesor) {
+    public void inscribir(CursoProfesor cursoProfesor) throws Exception {
         listado.add(cursoProfesor);
+        cursoProfesorDAO.asignarProfesorACurso(cursoProfesor);
         guardarInformacion(cursoProfesor);
+    }
+
+    public void eliminar(CursoProfesor cursoProfesor) {
+        listado.remove(cursoProfesor);
+        cursoProfesorDAO.eliminarAsignacion(cursoProfesor);
+        cargarDatosDB();
     }
 
     public void guardarInformacion(CursoProfesor cursoProfesor) {
@@ -66,6 +77,19 @@ public class CursosProfesores implements Servicios {
             System.out.println("Datos del archivo 'cursosProfesores' cargados exitosamente!");
         } catch (IOException | ClassNotFoundException error) {
             error.printStackTrace(System.out);
+        }
+    }
+
+    public void cargarDatosDB() {
+        listado.clear();
+
+        List<CursoProfesor> cursoProfesor = cursoProfesorDAO.obtenerTodasLasAsignaciones();
+        listado.addAll(cursoProfesor);
+
+        if (listado.isEmpty()) {
+            System.out.println("No hay datos en la base de datos.");
+        } else {
+            System.out.println("Datos de la base de datos cargados exitosamente!");
         }
     }
 
