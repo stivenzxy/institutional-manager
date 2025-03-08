@@ -1,6 +1,6 @@
 package DAO;
 
-import modelo.ConexionDB;
+import modelo.dbConfig.ConexionDB;
 import modelo.institucion.Programa;
 import java.sql.*;
 import java.util.ArrayList;

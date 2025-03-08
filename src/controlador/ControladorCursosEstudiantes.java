@@ -1,5 +1,6 @@
 package controlador;
 
+import DAO.CursoDAO;
 import DAO.EstudianteDAO;
 import modelo.entidades.Estudiante;
 import modelo.institucion.Curso;
@@ -9,6 +10,7 @@ import vista.GestionCursosEstudiantesGUI;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.util.List;
 import java.util.Objects;
 
 public class ControladorCursosEstudiantes {
@@ -28,6 +30,9 @@ public class ControladorCursosEstudiantes {
 
         this.cargarInscripciones();
         estudianteDAO.obtenerTodosLosEstudiantes();
+
+        cargarCursosEnComboBox();
+        cargarEstudiantesEnComboBox();
     }
 
     private Inscripcion obtenerDatosInscripcion() {
@@ -142,6 +147,24 @@ public class ControladorCursosEstudiantes {
             vista.getTxtID().setText(idInscripcion);
             vista.getTxtAnio().setText(anio);
             vista.getTxtSemestre().setText(semestre);
+        }
+    }
+
+    private void cargarCursosEnComboBox() {
+        CursoDAO cursoDAO = new CursoDAO();
+        List<Curso> cursos = cursoDAO.obtenerTodosLosCursos();
+        vista.getCmbCurso().removeAllItems();
+        for (Curso curso : cursos) {
+            vista.getCmbCurso().addItem(curso);
+        }
+    }
+
+    public void cargarEstudiantesEnComboBox() {
+        EstudianteDAO estudianteDAO = new EstudianteDAO();
+        List<Estudiante> estudiantes = estudianteDAO.obtenerTodosLosEstudiantes();
+        vista.getCmbEstudiante().removeAllItems();
+        for (Estudiante estudiante : estudiantes) {
+            vista.getCmbEstudiante().addItem(estudiante);
         }
     }
 }

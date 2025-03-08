@@ -42,9 +42,6 @@ public class GestionCursosEstudiantesGUI extends JPanel {
         agregarCampo(panelFormulario, gbc, "Año:", txtAnio = new JTextField(10), 4);
         agregarCampo(panelFormulario, gbc, "Semestre:", txtSemestre = new JTextField(10), 5);
 
-        cargarCursosEnComboBox();
-        cargarEstudiantesEnComboBox();
-
         gbc.gridx = 0;
         gbc.gridy = 6;
         gbc.gridwidth = 2;
@@ -91,24 +88,6 @@ public class GestionCursosEstudiantesGUI extends JPanel {
         panel.add(new JLabel(etiqueta), gbc);
         gbc.gridx = 1;
         panel.add(componente, gbc);
-    }
-
-    private void cargarCursosEnComboBox() {
-        CursoDAO cursoDAO = new CursoDAO();
-        List<Curso> cursos = cursoDAO.obtenerTodosLosCursos();
-        cmbCurso.removeAllItems();
-        for (Curso curso : cursos) {
-            cmbCurso.addItem(curso);
-        }
-    }
-
-    public void cargarEstudiantesEnComboBox() {
-        EstudianteDAO estudianteDAO = new EstudianteDAO();
-        List<Estudiante> estudiantes = estudianteDAO.obtenerTodosLosEstudiantes();
-        cmbEstudiante.removeAllItems();
-        for (Estudiante estudiante : estudiantes) {
-            cmbEstudiante.addItem(estudiante);
-        }
     }
 
     public JTextField getTxtID() { return txtID; }

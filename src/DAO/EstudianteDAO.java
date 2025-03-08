@@ -1,6 +1,6 @@
 package DAO;
 
-import modelo.ConexionDB;
+import modelo.dbConfig.ConexionDB;
 import modelo.entidades.Estudiante;
 import modelo.institucion.Programa;
 

@@ -16,6 +16,12 @@ public class Persona implements Serializable { // Serializable convierte la clas
         this.email = email;
     }
 
+    public Persona(String nombres, String apellidos, String email) {
+        this.nombres = nombres;
+        this.apellidos = apellidos;
+        this.email = email;
+    }
+
     public double getID() {
         return ID;
     }

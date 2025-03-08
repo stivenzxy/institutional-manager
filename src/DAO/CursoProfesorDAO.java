@@ -1,19 +1,17 @@
 package DAO;
 
-import modelo.ConexionDB;
+import modelo.dbConfig.ConexionDB;
 import modelo.institucion.Curso;
 import modelo.entidades.Profesor;
 import modelo.relaciones.CursoProfesor;
-import modelo.relaciones.CursosProfesores;
 
-import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static modelo.ConexionDB.ejecutarSentenciaParametrizada;
+import static modelo.dbConfig.ConexionDB.ejecutarSentenciaParametrizada;
 
 public class CursoProfesorDAO {
     private static final Logger logger = Logger.getLogger(CursoProfesorDAO.class.getName());

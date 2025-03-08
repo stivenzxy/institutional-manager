@@ -1,6 +1,6 @@
 package DAO;
 
-import modelo.ConexionDB;
+import modelo.dbConfig.ConexionDB;
 import modelo.entidades.Estudiante;
 import modelo.entidades.Persona;
 import modelo.entidades.Profesor;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static modelo.ConexionDB.ejecutarSentenciaParametrizada;
+import static modelo.dbConfig.ConexionDB.ejecutarSentenciaParametrizada;
 
 public class PersonaDAO {
     private static final Logger logger = Logger.getLogger(PersonaDAO.class.getName());

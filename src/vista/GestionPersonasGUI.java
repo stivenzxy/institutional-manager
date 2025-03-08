@@ -1,6 +1,7 @@
 package vista;
 
 import DAO.ProgramaDAO;
+import controlador.ControladorPersonas;
 import modelo.institucion.Programa;
 
 import javax.swing.*;
@@ -46,8 +47,6 @@ public class GestionPersonasGUI extends JPanel {
         agregarCampo(panelFormulario, gbc, "Promedio:", txtPromedio = new JTextField(10), 8);
         agregarCampo(panelFormulario, gbc, "Programa:", cmbPrograma = new JComboBox<Programa>(), 9);
         agregarCampo(panelFormulario, gbc, "Tipo de Contrato:", txtTipoContrato = new JTextField(10), 10);
-
-        cargarProgramasEnComboBox();
 
         gbc.gridx = 0;
         gbc.gridy = 11;
@@ -96,15 +95,6 @@ public class GestionPersonasGUI extends JPanel {
         panel.add(new JLabel(etiqueta), gbc);
         gbc.gridx = 1;
         panel.add(componente, gbc);
-    }
-
-    private void cargarProgramasEnComboBox() {
-        ProgramaDAO programaDAO = new ProgramaDAO();
-        List<Programa> programas = programaDAO.obtenerTodosLosProgramas();
-        cmbPrograma.removeAllItems();
-        for (Programa programa : programas) {
-            cmbPrograma.addItem(programa);
-        }
     }
 
     public JTextField getTxtID() { return txtID; }

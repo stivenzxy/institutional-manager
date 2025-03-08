@@ -43,9 +43,6 @@ public class GestionCursosProfesoresGUI extends JPanel {
         agregarCampo(panelFormulario, gbc, "Año:", txtAnio = new JTextField(10), 3);
         agregarCampo(panelFormulario, gbc, "Semestre:", txtSemestre = new JTextField(10), 4);
 
-        cargarProfesoresEnComboBox();
-        cargarCursosEnComboBox();
-
         gbc.gridx = 0;
         gbc.gridy = 5;
         gbc.gridwidth = 2;
@@ -85,24 +82,6 @@ public class GestionCursosProfesoresGUI extends JPanel {
         panel.add(new JLabel(etiqueta), gbc);
         gbc.gridx = 1;
         panel.add(componente, gbc);
-    }
-
-    private void cargarProfesoresEnComboBox() {
-        ProfesorDAO profesorDAO = new ProfesorDAO();
-        List<Profesor> profesores = profesorDAO.obtenerTodosLosProfesores();
-        cmbProfesores.removeAllItems();
-        for (Profesor profesor : profesores) {
-            cmbProfesores.addItem(profesor);
-        }
-    }
-
-    private void cargarCursosEnComboBox() {
-        CursoDAO cursoDAO = new CursoDAO();
-        List<Curso> cursos = cursoDAO.obtenerTodosLosCursos();
-        cmbCursos.removeAllItems();
-        for (Curso curso : cursos) {
-            cmbCursos.addItem(curso);
-        }
     }
 
     public JComboBox<Profesor> getCmbProfesores() { return cmbProfesores; }

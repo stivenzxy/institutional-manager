@@ -1,5 +1,7 @@
 package controlador;
 
+import DAO.CursoDAO;
+import DAO.ProfesorDAO;
 import modelo.entidades.Profesor;
 import modelo.institucion.Curso;
 import modelo.relaciones.CursoProfesor;
@@ -8,6 +10,7 @@ import vista.GestionCursosProfesoresGUI;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.util.List;
 
 public class ControladorCursosProfesores {
     private final GestionCursosProfesoresGUI vista;
@@ -22,7 +25,8 @@ public class ControladorCursosProfesores {
         this.vista.getBtnEliminar().addActionListener(e -> eliminarAsignacion());
         this.vista.getTablaAsignaciones().getSelectionModel().addListSelectionListener(e -> seleccionarAsignacion());
 
-        cargarCursoProfesores();
+        cargarCursosEnComboBox();
+        cargarProfesoresEnComboBox();
     }
 
     private void inscribirCursoProfesor() {
@@ -110,6 +114,24 @@ public class ControladorCursosProfesores {
         if (filaSeleccionada != -1) {
             vista.getTxtAnio().setText(vista.getModeloTabla().getValueAt(filaSeleccionada, 2).toString());
             vista.getTxtSemestre().setText(vista.getModeloTabla().getValueAt(filaSeleccionada, 3).toString());
+        }
+    }
+
+    private void cargarProfesoresEnComboBox() {
+        ProfesorDAO profesorDAO = new ProfesorDAO();
+        List<Profesor> profesores = profesorDAO.obtenerTodosLosProfesores();
+        vista.getCmbProfesores().removeAllItems();
+        for (Profesor profesor : profesores) {
+            vista.getCmbProfesores().addItem(profesor);
+        }
+    }
+
+    private void cargarCursosEnComboBox() {
+        CursoDAO cursoDAO = new CursoDAO();
+        List<Curso> cursos = cursoDAO.obtenerTodosLosCursos();
+        vista.getCmbCursos().removeAllItems();
+        for (Curso curso : cursos) {
+            vista.getCmbCursos().addItem(curso);
         }
     }
 }

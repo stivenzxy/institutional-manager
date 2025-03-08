@@ -1,5 +1,6 @@
 package controlador;
 
+import DAO.ProgramaDAO;
 import modelo.entidades.Estudiante;
 import modelo.entidades.Persona;
 import modelo.entidades.Profesor;
@@ -8,6 +9,7 @@ import modelo.relaciones.InscripcionesPersonas;
 import vista.GestionPersonasGUI;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.util.List;
 import java.util.Objects;
 import java.text.DecimalFormat;
 
@@ -29,10 +31,11 @@ public class ControladorPersonas {
         this.actualizarCampos();
         this.cargarPersonas();
         this.vista.getCmbTipoPersona().addActionListener(e -> actualizarCampos());
+        cargarProgramasEnComboBox();
+        vista.getTxtID().setVisible(false);
     }
 
     private Persona obtenerDatosPersona() throws NumberFormatException {
-        double id = Double.parseDouble(vista.getTxtID().getText());
         String nombres = vista.getTxtNombres().getText();
         String apellidos = vista.getTxtApellidos().getText();
         String email = vista.getTxtEmail().getText();
@@ -49,13 +52,14 @@ public class ControladorPersonas {
             boolean activo = vista.getCheckActivo().isSelected();
             Programa programaSeleccionado = (Programa) vista.getCmbPrograma().getSelectedItem();
 
-            return new Estudiante(id, nombres, apellidos, email, codigo, activo, promedio, programaSeleccionado);
+            return new Estudiante(nombres, apellidos, email, codigo, activo, promedio, programaSeleccionado);
         } else if ("Profesor".equals(tipo)) {
             String tipoContrato = vista.getTxtTipoContrato().getText();
-            return new Profesor(id, nombres, apellidos, email, tipoContrato);
+            return new Profesor(nombres, apellidos, email, tipoContrato);
         }
-        return new Persona(id, nombres, apellidos, email);
+        return new Persona(nombres, apellidos, email);
     }
+
 
     private void guardarPersona() {
         try {
@@ -71,21 +75,37 @@ public class ControladorPersonas {
     }
 
     private void actualizarPersona() {
+        int filaSeleccionada = vista.getTablaPersonas().getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(vista, "Seleccione una persona para actualizar.");
+            return;
+        }
+
         try {
             Persona persona = obtenerDatosPersona();
             if (persona == null) return;
+
+            double id = Double.parseDouble(vista.getModeloTabla().getValueAt(filaSeleccionada, 0).toString());
+            persona.setID(id);
 
             modelo.actualizar(persona);
             JOptionPane.showMessageDialog(vista, "Persona actualizada correctamente.");
             cargarPersonas();
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(vista, "El ID debe ser un número válido.");
+            JOptionPane.showMessageDialog(vista, "Error al procesar los datos.");
         }
     }
 
+
     private void eliminarPersona() {
+        int filaSeleccionada = vista.getTablaPersonas().getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(vista, "Seleccione una persona para eliminar.");
+            return;
+        }
+
         try {
-            double id = Double.parseDouble(vista.getTxtID().getText());
+            double id = Double.parseDouble(vista.getModeloTabla().getValueAt(filaSeleccionada, 0).toString());
 
             Persona personaAEliminar = modelo.getPersonas().stream()
                     .filter(p -> Double.compare(p.getID(), id) == 0)
@@ -101,7 +121,7 @@ public class ControladorPersonas {
             JOptionPane.showMessageDialog(vista, "Persona eliminada correctamente.");
             cargarPersonas();
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(vista, "El ID debe ser un número válido.");
+            JOptionPane.showMessageDialog(vista, "Error al procesar los datos.");
         }
     }
 
@@ -167,5 +187,14 @@ public class ControladorPersonas {
         vista.getTxtPromedio().setEnabled(esEstudiante && (!esPersona || !esProfesor));
         vista.getCmbPrograma().setEnabled(esEstudiante && (!esPersona || !esProfesor));
         vista.getTxtTipoContrato().setEnabled(esProfesor && (!esEstudiante || !esPersona));
+    }
+
+    private void cargarProgramasEnComboBox() {
+        ProgramaDAO programaDAO = new ProgramaDAO();
+        List<Programa> programas = programaDAO.obtenerTodosLosProgramas();
+        vista.getCmbPrograma().removeAllItems();
+        for (Programa programa : programas) {
+            vista.getCmbPrograma().addItem(programa);
+        }
     }
 }

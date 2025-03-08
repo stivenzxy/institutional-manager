@@ -1,6 +1,6 @@
 package DAO;
 
-import modelo.ConexionDB;
+import modelo.dbConfig.ConexionDB;
 import modelo.institucion.Curso;
 import modelo.institucion.Programa;
 
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static modelo.ConexionDB.ejecutarSentenciaParametrizada;
+import static modelo.dbConfig.ConexionDB.ejecutarSentenciaParametrizada;
 
 public class CursoDAO {
     private static final Logger logger = Logger.getLogger(CursoDAO.class.getName());

@@ -1,6 +1,6 @@
 import controlador.ControladorCursosEstudiantes;
 import controlador.ControladorCursosProfesores;
-import modelo.ConexionDB;
+import modelo.dbConfig.ConexionDB;
 import modelo.relaciones.CursosInscritos;
 import modelo.relaciones.CursosProfesores;
 import vista.GestionCursosEstudiantesGUI;
