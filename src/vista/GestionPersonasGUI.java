@@ -1,16 +1,12 @@
 package vista;
 
-import DAO.ProgramaDAO;
-import controlador.ControladorPersonas;
 import modelo.institucion.Programa;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.List;
 
 public class GestionPersonasGUI extends JPanel {
-    private final JTextField txtID, txtNombres, txtApellidos, txtEmail;
+    private final JTextField txtNombres, txtApellidos, txtEmail;
     private final JTextField txtCodigo, txtPromedio, txtTipoContrato;
     private final JButton btnGuardar, btnActualizar, btnEliminar, btnCargar;
     private final JTable tablaPersonas;
@@ -18,6 +14,7 @@ public class GestionPersonasGUI extends JPanel {
     private final JComboBox<String> cmbTipoPersona;
     private final JComboBox<Programa> cmbPrograma;
     private final JCheckBox checkActivo;
+
 
     public GestionPersonasGUI() {
         setLayout(new BorderLayout());
@@ -37,16 +34,15 @@ public class GestionPersonasGUI extends JPanel {
         panelFormulario.add(lblTituloFormulario, gbc);
 
         gbc.gridwidth = 1;
-        agregarCampo(panelFormulario, gbc, "ID:", txtID = new JTextField(10), 1);
-        agregarCampo(panelFormulario, gbc, "Nombres:", txtNombres = new JTextField(10), 2);
-        agregarCampo(panelFormulario, gbc, "Apellidos:", txtApellidos = new JTextField(10), 3);
-        agregarCampo(panelFormulario, gbc, "Email:", txtEmail = new JTextField(10), 4);
-        agregarCampo(panelFormulario, gbc, "Tipo de Usuario:", cmbTipoPersona = new JComboBox<>(new String[]{"Persona", "Estudiante", "Profesor"}), 5);
-        agregarCampo(panelFormulario, gbc, "Código:", txtCodigo = new JTextField(10), 6);
-        agregarCampo(panelFormulario, gbc, "Activo:", checkActivo = new JCheckBox(), 7);
-        agregarCampo(panelFormulario, gbc, "Promedio:", txtPromedio = new JTextField(10), 8);
-        agregarCampo(panelFormulario, gbc, "Programa:", cmbPrograma = new JComboBox<Programa>(), 9);
-        agregarCampo(panelFormulario, gbc, "Tipo de Contrato:", txtTipoContrato = new JTextField(10), 10);
+        agregarCampo(panelFormulario, gbc, "Nombres:", txtNombres = new JTextField(10), 1);
+        agregarCampo(panelFormulario, gbc, "Apellidos:", txtApellidos = new JTextField(10), 2);
+        agregarCampo(panelFormulario, gbc, "Email:", txtEmail = new JTextField(10), 3);
+        agregarCampo(panelFormulario, gbc, "Tipo de Usuario:", cmbTipoPersona = new JComboBox<>(new String[]{"Persona", "Estudiante", "Profesor"}), 4);
+        agregarCampo(panelFormulario, gbc, "Código:", txtCodigo = new JTextField(10), 5);
+        agregarCampo(panelFormulario, gbc, "Activo:", checkActivo = new JCheckBox(), 6);
+        agregarCampo(panelFormulario, gbc, "Promedio:", txtPromedio = new JTextField(10), 7);
+        agregarCampo(panelFormulario, gbc, "Programa:", cmbPrograma = new JComboBox<Programa>(), 8);
+        agregarCampo(panelFormulario, gbc, "Tipo de Contrato:", txtTipoContrato = new JTextField(10), 9);
 
         gbc.gridx = 0;
         gbc.gridy = 11;
@@ -97,7 +93,6 @@ public class GestionPersonasGUI extends JPanel {
         panel.add(componente, gbc);
     }
 
-    public JTextField getTxtID() { return txtID; }
     public JTextField getTxtNombres() { return txtNombres; }
     public JTextField getTxtApellidos() { return txtApellidos; }
     public JTextField getTxtEmail() { return txtEmail; }

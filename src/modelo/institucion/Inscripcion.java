@@ -19,6 +19,13 @@ public class Inscripcion implements Serializable {
         this.estudiante = estudiante;
     }
 
+    public Inscripcion(Curso curso, int anio, int semestre, Estudiante estudiante) {
+        this.curso = curso;
+        this.anio = anio;
+        this.semestre = semestre;
+        this.estudiante = estudiante;
+    }
+
     public double getID() {
         return ID;
     }

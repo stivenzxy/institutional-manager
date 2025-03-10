@@ -12,6 +12,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.IntStream;
 
 public class ControladorCursosEstudiantes {
     private final GestionCursosEstudiantesGUI vista;
@@ -20,26 +22,25 @@ public class ControladorCursosEstudiantes {
     public ControladorCursosEstudiantes(GestionCursosEstudiantesGUI vista, CursosInscritos modelo) {
         this.vista = vista;
         this.modelo = modelo;
-        EstudianteDAO estudianteDAO = new EstudianteDAO();
 
+        this.inicializarEventos();
+        this.cargarInscripciones();
+        this.cargarCursosEnComboBox();
+        this.cargarEstudiantesEnComboBox();
+    }
+
+    private void inicializarEventos() {
         this.vista.getBtnGuardar().addActionListener(e -> inscribirEstudianteACurso());
         this.vista.getBtnActualizar().addActionListener(e->actualizarInscripcion());
         this.vista.getBtnEliminar().addActionListener(e -> eliminarInscripcion());
         this.vista.getBtnCargar().addActionListener(e -> cargarInscripciones());
         this.vista.getTablaInscripciones().getSelectionModel().addListSelectionListener(e -> seleccionarInscripcion());
-
-        this.cargarInscripciones();
-        estudianteDAO.obtenerTodosLosEstudiantes();
-
-        cargarCursosEnComboBox();
-        cargarEstudiantesEnComboBox();
     }
 
     private Inscripcion obtenerDatosInscripcion() {
         try {
             Estudiante estudianteSeleccionado = (Estudiante) vista.getCmbEstudiante().getSelectedItem();
             Curso cursoSeleccionado = (Curso) vista.getCmbCurso().getSelectedItem();
-            double id = Double.parseDouble(vista.getTxtID().getText());
             int anio = Integer.parseInt(vista.getTxtAnio().getText());
             int semestre = Integer.parseInt(vista.getTxtSemestre().getText());
 
@@ -48,7 +49,7 @@ public class ControladorCursosEstudiantes {
                 return null;
             }
 
-            return new Inscripcion(id, cursoSeleccionado, anio, semestre, estudianteSeleccionado);
+            return new Inscripcion(cursoSeleccionado, anio, semestre, estudianteSeleccionado);
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(vista, "El año y el semestre deben ser números válidos.");
             return null;
@@ -114,40 +115,35 @@ public class ControladorCursosEstudiantes {
         modelo.cargarDatosDB();
 
         for (Inscripcion i : modelo.getListado()) {
-            modeloTabla.addRow(new Object[]{i.getID(), i.getEstudiante().getNombres() + " " + i.getEstudiante().getApellidos(), i.getCurso().getID(), i.getCurso().getNombre(), i.getAnio(), i.getSemestre()});
+            modeloTabla.addRow(new Object[]{i.getID(), i.getEstudiante().getNombreCompleto(), i.getSemestre() , i.getCurso().getNombre(), i.getAnio()});
         }
         modeloTabla.fireTableDataChanged();
     }
 
     private void seleccionarInscripcion() {
-        int filaSeleccionada = vista.getTablaInscripciones().getSelectedRow();
-        if (filaSeleccionada != -1) {
-            DefaultTableModel modeloTabla = vista.getModeloTabla();
+        int fila = vista.getTablaInscripciones().getSelectedRow();
+        if (fila == -1) return;
 
-            String idInscripcion = modeloTabla.getValueAt(filaSeleccionada, 0).toString();
-            String estudianteNombre = modeloTabla.getValueAt(filaSeleccionada, 1).toString();
-            String semestre = modeloTabla.getValueAt(filaSeleccionada, 2).toString();
-            String cursoNombre = modeloTabla.getValueAt(filaSeleccionada, 3).toString();
-            String anio = modeloTabla.getValueAt(filaSeleccionada, 4).toString();
+        DefaultTableModel modelo = vista.getModeloTabla();
+        JTextField[] campos = { vista.getTxtAnio(), vista.getTxtSemestre() };
+        int[] indices = { 4, 2 };
 
-            for (int i = 0; i < vista.getCmbEstudiante().getItemCount(); i++) {
-                Estudiante estudiante = (Estudiante) vista.getCmbEstudiante().getItemAt(i);
-                if (estudiante.getNombres().equals(estudianteNombre)) {
-                    vista.getCmbEstudiante().setSelectedIndex(i);
-                    break;
-                }
-            }
-            for (int i = 0; i < vista.getCmbCurso().getItemCount(); i++) {
-                Curso curso = (Curso) vista.getCmbCurso().getItemAt(i);
-                if (curso.getNombre().equals(cursoNombre)) {
-                    vista.getCmbCurso().setSelectedIndex(i);
-                    break;
-                }
-            }
-            vista.getTxtID().setText(idInscripcion);
-            vista.getTxtAnio().setText(anio);
-            vista.getTxtSemestre().setText(semestre);
-        }
+        IntStream.range(0, campos.length)
+                .forEach(i -> campos[i].setText(modelo.getValueAt(fila, indices[i]).toString()));
+
+        vista.getCmbEstudiante().setSelectedItem(
+                IntStream.range(0, vista.getCmbEstudiante().getItemCount())
+                        .mapToObj(vista.getCmbEstudiante()::getItemAt)
+                        .filter(e -> ((Estudiante) e).getNombreCompleto().equals(modelo.getValueAt(fila, 1).toString()))
+                        .findFirst().orElse(null)
+        );
+
+        vista.getCmbCurso().setSelectedItem(
+                IntStream.range(0, vista.getCmbCurso().getItemCount())
+                        .mapToObj(vista.getCmbCurso()::getItemAt)
+                        .filter(c -> ((Curso) c).getNombre().equals(modelo.getValueAt(fila, 3).toString()))
+                        .findFirst().orElse(null)
+        );
     }
 
     private void cargarCursosEnComboBox() {
@@ -162,6 +158,7 @@ public class ControladorCursosEstudiantes {
     public void cargarEstudiantesEnComboBox() {
         EstudianteDAO estudianteDAO = new EstudianteDAO();
         List<Estudiante> estudiantes = estudianteDAO.obtenerTodosLosEstudiantes();
+
         vista.getCmbEstudiante().removeAllItems();
         for (Estudiante estudiante : estudiantes) {
             vista.getCmbEstudiante().addItem(estudiante);

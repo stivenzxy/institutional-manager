@@ -19,9 +19,8 @@ public class InscripcionDAO {
     public InscripcionDAO() {}
 
     public void insertarInscripcion(Inscripcion inscripcion) {
-        String sql = "INSERT INTO inscripciones (id, curso_id, estudiante_id, anio, semestre) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO inscripciones (curso_id, estudiante_id, anio, semestre) VALUES (?, ?, ?, ?)";
         ejecutarSentenciaParametrizada(sql,
-                inscripcion.getID(),
                 inscripcion.getCurso().getID(),
                 inscripcion.getEstudiante().getID(),
                 inscripcion.getAnio(),
@@ -48,16 +47,16 @@ public class InscripcionDAO {
     public List<Inscripcion> obtenerTodasLasInscripciones() {
         List<Inscripcion> inscripciones = new ArrayList<>();
         String sql = """
-            SELECT i.id AS inscripcion_id, i.anio, i.semestre,
-                   c.id AS curso_id, c.nombre AS curso_nombre,
-                   e.id AS estudiante_id, e.codigo AS estudiante_codigo,
-                   p.nombres AS estudiante_nombre, p.apellidos AS estudiante_apellido, p.email AS estudiante_email,
-                   e.activo AS estudiante_activo, e.promedio AS estudiante_promedio
-            FROM inscripciones i
-            JOIN cursos c ON i.curso_id = c.id
-            JOIN estudiantes e ON i.estudiante_id = e.id
-            JOIN personas p ON e.id = p.id
-        """;
+        SELECT i.id AS inscripcion_id, i.anio, i.semestre,
+               c.id AS curso_id, c.nombre AS curso_nombre,
+               e.id AS estudiante_id, e.codigo AS estudiante_codigo,
+               p.nombres AS estudiante_nombre, p.apellidos AS estudiante_apellido, p.email AS estudiante_email,
+               e.activo AS estudiante_activo, e.promedio AS estudiante_promedio
+        FROM inscripciones i
+        JOIN cursos c ON i.curso_id = c.id
+        JOIN estudiantes e ON i.estudiante_id = e.id
+        JOIN personas p ON e.id = p.id
+    """;
 
         try (Connection conn = ConexionDB.getConexion();
              PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -65,9 +64,10 @@ public class InscripcionDAO {
 
             while (rs.next()) {
                 Curso curso = new Curso(
-                        rs.getInt("id"),
-                        rs.getString("nombre")
+                        rs.getInt("curso_id"),
+                        rs.getString("curso_nombre")
                 );
+
                 Estudiante estudiante = new Estudiante(
                         rs.getDouble("estudiante_id"),
                         rs.getString("estudiante_nombre"),
@@ -78,13 +78,15 @@ public class InscripcionDAO {
                         rs.getDouble("estudiante_promedio"),
                         null
                 );
+
                 Inscripcion inscripcion = new Inscripcion(
-                        rs.getDouble("id"),
+                        rs.getDouble("inscripcion_id"),
                         curso,
                         rs.getInt("anio"),
                         rs.getInt("semestre"),
                         estudiante
                 );
+
                 inscripciones.add(inscripcion);
             }
         } catch (SQLException exception) {

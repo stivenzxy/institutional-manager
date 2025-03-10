@@ -20,13 +20,16 @@ public class ControladorCursosProfesores {
         this.vista = vista;
         this.modelo = modelo;
 
+        this.inicializarEventos();
+        this.cargarCursosEnComboBox();
+        this.cargarProfesoresEnComboBox();
+    }
+
+    private void inicializarEventos() {
         this.vista.getBtnAsignar().addActionListener(e -> inscribirCursoProfesor());
         this.vista.getBtnCargar().addActionListener(e -> cargarCursoProfesores());
         this.vista.getBtnEliminar().addActionListener(e -> eliminarAsignacion());
         this.vista.getTablaAsignaciones().getSelectionModel().addListSelectionListener(e -> seleccionarAsignacion());
-
-        cargarCursosEnComboBox();
-        cargarProfesoresEnComboBox();
     }
 
     private void inscribirCursoProfesor() {
@@ -65,12 +68,7 @@ public class ControladorCursosProfesores {
             modelo.cargarDatosDB();
 
             for (CursoProfesor asignacion : modelo.getListado()) {
-                modeloTabla.addRow(new Object[]{
-                        asignacion.getProfesor().getNombres(),
-                        asignacion.getCurso().getNombre(),
-                        asignacion.getAnio(),
-                        asignacion.getSemestre()
-                });
+                modeloTabla.addRow(new Object[]{asignacion.getProfesor().getNombres(), asignacion.getCurso().getNombre(), asignacion.getAnio(), asignacion.getSemestre()});
             }
             modeloTabla.fireTableDataChanged();
         } catch (Exception e) {
@@ -107,7 +105,6 @@ public class ControladorCursosProfesores {
             cargarCursoProfesores();
         }
     }
-
 
     private void seleccionarAsignacion() {
         int filaSeleccionada = vista.getTablaAsignaciones().getSelectedRow();

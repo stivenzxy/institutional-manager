@@ -11,7 +11,7 @@ import java.awt.*;
 import java.util.List;
 
 public class GestionCursosEstudiantesGUI extends JPanel {
-    private final JTextField txtID, txtAnio, txtSemestre;
+    private final JTextField txtAnio, txtSemestre;
     private final JComboBox<Curso> cmbCurso;
     private final JComboBox<Estudiante> cmbEstudiante;
     private final JButton btnGuardar, btnActualizar, btnEliminar, btnCargar;
@@ -36,11 +36,10 @@ public class GestionCursosEstudiantesGUI extends JPanel {
         panelFormulario.add(lblTituloFormulario, gbc);
 
         gbc.gridwidth = 1;
-        agregarCampo(panelFormulario, gbc, "ID:", txtID = new JTextField(10), 1);
-        agregarCampo(panelFormulario, gbc, "Curso:", cmbCurso = new JComboBox<>(), 2);
-        agregarCampo(panelFormulario, gbc, "Estudiante:", cmbEstudiante = new JComboBox<>(), 3);
-        agregarCampo(panelFormulario, gbc, "Año:", txtAnio = new JTextField(10), 4);
-        agregarCampo(panelFormulario, gbc, "Semestre:", txtSemestre = new JTextField(10), 5);
+        agregarCampo(panelFormulario, gbc, "Curso:", cmbCurso = new JComboBox<>(), 1);
+        agregarCampo(panelFormulario, gbc, "Estudiante:", cmbEstudiante = new JComboBox<>(), 2);
+        agregarCampo(panelFormulario, gbc, "Año:", txtAnio = new JTextField(10), 3);
+        agregarCampo(panelFormulario, gbc, "Semestre:", txtSemestre = new JTextField(10), 4);
 
         gbc.gridx = 0;
         gbc.gridy = 6;
@@ -90,7 +89,6 @@ public class GestionCursosEstudiantesGUI extends JPanel {
         panel.add(componente, gbc);
     }
 
-    public JTextField getTxtID() { return txtID; }
     public JTextField getTxtAnio() { return txtAnio; }
     public JTextField getTxtSemestre() { return txtSemestre; }
     public JComboBox<Curso> getCmbCurso() { return cmbCurso; }

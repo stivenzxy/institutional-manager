@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import java.util.Objects;
 import java.text.DecimalFormat;
+import java.util.stream.IntStream;
 
 public class ControladorPersonas {
     private final GestionPersonasGUI vista;
@@ -22,17 +23,19 @@ public class ControladorPersonas {
         this.vista = vista;
         this.modelo = modelo;
 
+        this.inicializarEventos();
+        this.actualizarCampos();
+        this.cargarPersonas();
+        this.cargarProgramasEnComboBox();
+    }
+
+    private void inicializarEventos() {
         this.vista.getBtnGuardar().addActionListener(e -> guardarPersona());
         this.vista.getBtnActualizar().addActionListener(e -> actualizarPersona());
         this.vista.getBtnEliminar().addActionListener(e -> eliminarPersona());
         this.vista.getBtnCargar().addActionListener(e -> cargarPersonas());
         this.vista.getTablaPersonas().getSelectionModel().addListSelectionListener(e -> seleccionarPersona());
-
-        this.actualizarCampos();
-        this.cargarPersonas();
         this.vista.getCmbTipoPersona().addActionListener(e -> actualizarCampos());
-        cargarProgramasEnComboBox();
-        vista.getTxtID().setVisible(false);
     }
 
     private Persona obtenerDatosPersona() throws NumberFormatException {
@@ -60,7 +63,6 @@ public class ControladorPersonas {
         return new Persona(nombres, apellidos, email);
     }
 
-
     private void guardarPersona() {
         try {
             Persona persona = obtenerDatosPersona();
@@ -69,7 +71,7 @@ public class ControladorPersonas {
             modelo.inscribir(persona);
             JOptionPane.showMessageDialog(vista, "Persona guardada exitosamente.");
             cargarPersonas();
-        } catch (NumberFormatException ex) {
+        } catch (NumberFormatException exception) {
             JOptionPane.showMessageDialog(vista, "El ID debe ser un número válido.");
         }
     }
@@ -91,7 +93,7 @@ public class ControladorPersonas {
             modelo.actualizar(persona);
             JOptionPane.showMessageDialog(vista, "Persona actualizada correctamente.");
             cargarPersonas();
-        } catch (NumberFormatException ex) {
+        } catch (NumberFormatException exception) {
             JOptionPane.showMessageDialog(vista, "Error al procesar los datos.");
         }
     }
@@ -120,7 +122,7 @@ public class ControladorPersonas {
             modelo.eliminar(personaAEliminar);
             JOptionPane.showMessageDialog(vista, "Persona eliminada correctamente.");
             cargarPersonas();
-        } catch (NumberFormatException ex) {
+        } catch (NumberFormatException exception) {
             JOptionPane.showMessageDialog(vista, "Error al procesar los datos.");
         }
     }
@@ -144,49 +146,54 @@ public class ControladorPersonas {
     }
 
     private void seleccionarPersona() {
-        int filaSeleccionada = vista.getTablaPersonas().getSelectedRow();
+        int fila = vista.getTablaPersonas().getSelectedRow();
+        if (fila == -1) return;
 
-        if (filaSeleccionada != -1) {
-            DefaultTableModel modeloTabla = vista.getModeloTabla();
+        DefaultTableModel modelo = vista.getModeloTabla();
+        limpiarCampos();
 
-            vista.getTxtID().setText(modeloTabla.getValueAt(filaSeleccionada, 0).toString());
-            vista.getTxtNombres().setText(modeloTabla.getValueAt(filaSeleccionada, 1).toString());
-            vista.getTxtApellidos().setText(modeloTabla.getValueAt(filaSeleccionada, 2).toString());
-            vista.getTxtEmail().setText(modeloTabla.getValueAt(filaSeleccionada, 3).toString());
+        JTextField[] campos = { vista.getTxtNombres(), vista.getTxtApellidos(), vista.getTxtEmail() };
 
-            String tipo = modeloTabla.getValueAt(filaSeleccionada, 4).toString();
-            vista.getCmbTipoPersona().setSelectedItem(tipo);
+        IntStream.range(0, campos.length)
+                .forEach(i -> campos[i].setText(modelo.getValueAt(fila, i + 1).toString()));
 
-            if ("Estudiante".equals(tipo)) {
-                vista.getTxtCodigo().setText(modeloTabla.getValueAt(filaSeleccionada, 5).toString());
-                vista.getCheckActivo().setSelected("Si".equals(modeloTabla.getValueAt(filaSeleccionada, 6).toString()));
-                vista.getTxtPromedio().setText(modeloTabla.getValueAt(filaSeleccionada, 7).toString());
+        String tipo = modelo.getValueAt(fila, 4).toString();
+        vista.getCmbTipoPersona().setSelectedItem(tipo);
 
-                String nombrePrograma = modeloTabla.getValueAt(filaSeleccionada, 8).toString();
-                for (int i = 0; i < vista.getCmbPrograma().getItemCount(); i++) {
-                    Programa programa = vista.getCmbPrograma().getItemAt(i);
-                    if (programa.getNombre().equals(nombrePrograma)) {
-                        vista.getCmbPrograma().setSelectedItem(programa);
-                        break;
-                    }
-                }
-            } else if ("Profesor".equals(tipo)) {
-                vista.getTxtTipoContrato().setText(modeloTabla.getValueAt(filaSeleccionada, 9).toString());
-            }
-            actualizarCampos();
+        if ("Estudiante".equals(tipo)) {
+            vista.getTxtCodigo().setText(modelo.getValueAt(fila, 5).toString());
+            vista.getCheckActivo().setSelected("Si".equals(modelo.getValueAt(fila, 6).toString()));
+            vista.getTxtPromedio().setText(modelo.getValueAt(fila, 7).toString());
+            vista.getCmbPrograma().setSelectedItem(
+                    IntStream.range(0, vista.getCmbPrograma().getItemCount())
+                            .mapToObj(vista.getCmbPrograma()::getItemAt)
+                            .filter(p -> p.getNombre().equals(modelo.getValueAt(fila, 8).toString()))
+                            .findFirst().orElse(null)
+            );
+        } else if ("Profesor".equals(tipo)) {
+            vista.getTxtTipoContrato().setText(modelo.getValueAt(fila, 9).toString());
         }
+        actualizarCampos();
+    }
+
+    private void limpiarCampos() {
+        vista.getTxtCodigo().setText("");
+        vista.getCheckActivo().setSelected(false);
+        vista.getTxtPromedio().setText("");
+        vista.getCmbPrograma().setSelectedItem(null);
+        vista.getTxtTipoContrato().setText("");
     }
 
     private void actualizarCampos() {
-        boolean esEstudiante = Objects.equals(vista.getCmbTipoPersona().getSelectedItem(), "Estudiante");
-        boolean esProfesor = vista.getCmbTipoPersona().getSelectedItem().equals("Profesor");
-        boolean esPersona = vista.getCmbTipoPersona().getSelectedItem().equals("Persona");
+        String tipo = Objects.toString(vista.getCmbTipoPersona().getSelectedItem(), "");
+        boolean esEstudiante = "Estudiante".equals(tipo);
+        boolean esProfesor = "Profesor".equals(tipo);
 
-        vista.getTxtCodigo().setEnabled(esEstudiante && (!esPersona || !esProfesor));
-        vista.getCheckActivo().setEnabled(esEstudiante && (!esPersona || !esProfesor));
-        vista.getTxtPromedio().setEnabled(esEstudiante && (!esPersona || !esProfesor));
-        vista.getCmbPrograma().setEnabled(esEstudiante && (!esPersona || !esProfesor));
-        vista.getTxtTipoContrato().setEnabled(esProfesor && (!esEstudiante || !esPersona));
+        vista.getTxtCodigo().setEnabled(esEstudiante);
+        vista.getCheckActivo().setEnabled(esEstudiante);
+        vista.getTxtPromedio().setEnabled(esEstudiante);
+        vista.getCmbPrograma().setEnabled(esEstudiante);
+        vista.getTxtTipoContrato().setEnabled(esProfesor);
     }
 
     private void cargarProgramasEnComboBox() {
