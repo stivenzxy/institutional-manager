@@ -1,6 +1,5 @@
 package vista;
 
-
 import javax.swing.*;
 
 public class VentanaPrincipal extends JFrame {
@@ -8,20 +7,28 @@ public class VentanaPrincipal extends JFrame {
 
     public VentanaPrincipal() {
         setTitle("Sistema de Gestión");
-        setSize(800, 600);
+        setSize(900, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         tabbedPane = new JTabbedPane();
 
-        tabbedPane.addTab("Gestión de Personas", new GestionPersonasGUI());
-        tabbedPane.addTab("Gestión de Cursos y Profesores", new GestionCursosProfesoresGUI());
-        tabbedPane.addTab("Inscripción de Cursos", new GestionCursosEstudiantesGUI());
+        GestionPersonasGUI gestionPersonasGUI = new GestionPersonasGUI();
+        GestionCursosProfesoresGUI gestionCursosProfesoresGUI = new GestionCursosProfesoresGUI();
+        GestionCursosEstudiantesGUI gestionCursosEstudiantesGUI = new GestionCursosEstudiantesGUI();
+
+        tabbedPane.addTab("Gestión de Personas", gestionPersonasGUI);
+        tabbedPane.addTab("Gestión de Cursos y Profesores", gestionCursosProfesoresGUI);
+        tabbedPane.addTab("Inscripción de Cursos", gestionCursosEstudiantesGUI);
+
+        tabbedPane.addChangeListener(e -> {
+            if (tabbedPane.getSelectedComponent() == gestionCursosEstudiantesGUI) {
+                gestionCursosEstudiantesGUI.actualizarListaEstudiantes();
+            } else if (tabbedPane.getSelectedComponent() == gestionCursosProfesoresGUI) {
+                gestionCursosProfesoresGUI.actualizarListaProfesores();
+            }
+        });
 
         add(tabbedPane);
-    }
-
-    public JTabbedPane getTabbedPane() {
-        return tabbedPane;
     }
 }

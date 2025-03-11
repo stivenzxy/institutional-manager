@@ -143,6 +143,32 @@ public class InscripcionesPersonas implements Servicios {
         }
     }
 
+    public List<Object[]> obtenerDatosPersonas() {
+        List<Object[]> datos = new ArrayList<>();
+
+        for (Persona p : listado) {
+            if (p instanceof Estudiante est) {
+                datos.add(new Object[]{
+                        est.getID(), est.getNombres(), est.getApellidos(), est.getEmail(),
+                        "Estudiante", est.getCodigo(), (est.isActivo() ? "Si" : "No"),
+                        est.getPromedio(), est.getPrograma() != null ? est.getPrograma().getNombre() : "", ""
+                });
+            } else if (p instanceof Profesor prof) {
+                datos.add(new Object[]{
+                        prof.getID(), prof.getNombres(), prof.getApellidos(), prof.getEmail(),
+                        "Profesor", "", "", "", "", prof.getTipoContrato()
+                });
+            } else {
+                datos.add(new Object[]{
+                        p.getID(), p.getNombres(), p.getApellidos(), p.getEmail(),
+                        "Persona", "", "", "", "", ""
+                });
+            }
+        }
+
+        return datos;
+    }
+
     public void cargarDatosDB() {
         listado.clear();
 

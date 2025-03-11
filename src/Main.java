@@ -28,19 +28,6 @@ public class Main {
                 ConexionDB.finalizarConexion();
             }));
 
-            GestionPersonasGUI gestionPersonasGUI = (GestionPersonasGUI) ventanaPrincipal.getTabbedPane().getComponentAt(0);
-            GestionCursosProfesoresGUI gestionCursosProfesoresGUI = (GestionCursosProfesoresGUI) ventanaPrincipal.getTabbedPane().getComponentAt(1);
-            GestionCursosEstudiantesGUI gestionCursosEstudiantesGUI = (GestionCursosEstudiantesGUI) ventanaPrincipal.getTabbedPane().getComponentAt(2);
-
-            InscripcionesPersonas modeloPersonas = new InscripcionesPersonas();
-            new ControladorPersonas(gestionPersonasGUI, modeloPersonas);
-
-            CursosProfesores modeloCursosProfesores = new CursosProfesores();
-            new ControladorCursosProfesores(gestionCursosProfesoresGUI, modeloCursosProfesores);
-
-            CursosInscritos modeloCursosInscritos = new CursosInscritos();
-            new ControladorCursosEstudiantes(gestionCursosEstudiantesGUI, modeloCursosInscritos);
-
             ventanaPrincipal.setVisible(true);
         });
     }

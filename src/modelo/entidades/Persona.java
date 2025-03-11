@@ -35,7 +35,7 @@ public class Persona implements Serializable { // Serializable convierte la clas
     }
 
     public String getNombreCompleto() {
-        return nombres + apellidos;
+        return nombres + " " + apellidos;
     }
 
     public void setNombres(String nombres) {

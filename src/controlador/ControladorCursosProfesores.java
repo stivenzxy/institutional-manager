@@ -10,83 +10,49 @@ import vista.GestionCursosProfesoresGUI;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.List;
+import java.util.Map;
 
 public class ControladorCursosProfesores {
-    private final GestionCursosProfesoresGUI vista;
     private final CursosProfesores modelo;
+    private final PropertyChangeSupport notificadorMensajes;
 
-    public ControladorCursosProfesores(GestionCursosProfesoresGUI vista, CursosProfesores modelo) {
-        this.vista = vista;
-        this.modelo = modelo;
-
-        this.inicializarEventos();
-        this.cargarCursosEnComboBox();
-        this.cargarProfesoresEnComboBox();
+    public ControladorCursosProfesores() {
+        modelo = new CursosProfesores();
+        notificadorMensajes = new PropertyChangeSupport(this);
     }
 
-    private void inicializarEventos() {
-        this.vista.getBtnAsignar().addActionListener(e -> inscribirCursoProfesor());
-        this.vista.getBtnCargar().addActionListener(e -> cargarCursoProfesores());
-        this.vista.getBtnEliminar().addActionListener(e -> eliminarAsignacion());
-        this.vista.getTablaAsignaciones().getSelectionModel().addListSelectionListener(e -> seleccionarAsignacion());
-    }
-
-    private void inscribirCursoProfesor() {
+    private CursoProfesor convertirDatosACursoProfesor(Map<String, Object> datos) {
         try {
-            Profesor profesorSeleccionado = (Profesor) vista.getCmbProfesores().getSelectedItem();
-            Curso cursoSeleccionado = (Curso) vista.getCmbCursos().getSelectedItem();
-            String anioTexto = vista.getTxtAnio().getText();
-            String semestreTexto = vista.getTxtSemestre().getText();
+            Profesor profesor = (Profesor) datos.get("profesor");
+            Curso curso = (Curso) datos.get("curso");
+            int anio = Integer.parseInt((String) datos.get("anio"));
+            int semestre = Integer.parseInt((String) datos.get("semestre"));
 
-            if (profesorSeleccionado == null || cursoSeleccionado == null) {
-                JOptionPane.showMessageDialog(vista, "Debe seleccionar un profesor y un curso.");
-                return;
+            if (profesor == null || curso == null) {
+                throw new IllegalArgumentException("Debe seleccionar un profesor y un curso.");
             }
 
-            int anio = Integer.parseInt(anioTexto);
-            int semestre = Integer.parseInt(semestreTexto);
+            return new CursoProfesor(profesor, anio, semestre, curso);
+        } catch (NumberFormatException exception) {
+            throw new IllegalArgumentException("El año y el semestre deben ser números válidos.");
+        }
+    }
 
-            CursoProfesor cursoProfesor = new CursoProfesor(profesorSeleccionado, anio, semestre, cursoSeleccionado);
-
+    public void inscribirCursoProfesor(Map<String, Object> datos) {
+        try {
+            CursoProfesor cursoProfesor = convertirDatosACursoProfesor(datos);
             modelo.inscribir(cursoProfesor);
-            JOptionPane.showMessageDialog(vista, "Asignación guardada exitosamente.");
             cargarCursoProfesores();
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(vista, "El año y el semestre deben ser números válidos.");
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(vista, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            notificadorMensajes.firePropertyChange("mensaje", null, "Profesor inscrito exitosamente!");
+        } catch (Exception exception) {
+            notificadorMensajes.firePropertyChange("mensaje", null, exception.getMessage());
         }
     }
 
-
-    private void cargarCursoProfesores() {
-        DefaultTableModel modeloTabla = vista.getModeloTabla();
-        modeloTabla.setRowCount(0);
-
-        try {
-            modelo.cargarDatosDB();
-
-            for (CursoProfesor asignacion : modelo.getListado()) {
-                modeloTabla.addRow(new Object[]{asignacion.getProfesor().getNombres(), asignacion.getCurso().getNombre(), asignacion.getAnio(), asignacion.getSemestre()});
-            }
-            modeloTabla.fireTableDataChanged();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(vista, "Error al cargar asignaciones: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void eliminarAsignacion() {
-        int filaSeleccionada = vista.getTablaAsignaciones().getSelectedRow();
-
-        if (filaSeleccionada == -1) {
-            JOptionPane.showMessageDialog(vista, "Seleccione una asignación para eliminar.");
-            return;
-        }
-
-        String profesorNombre = vista.getModeloTabla().getValueAt(filaSeleccionada, 0).toString();
-        String cursoNombre = vista.getModeloTabla().getValueAt(filaSeleccionada, 1).toString();
-
+    public void eliminarAsignacion(String profesorNombre, String cursoNombre) {
         CursoProfesor asignacionAEliminar = modelo.getListado().stream()
                 .filter(cp -> cp.getProfesor().getNombres().equals(profesorNombre) &&
                         cp.getCurso().getNombre().equals(cursoNombre))
@@ -94,41 +60,41 @@ public class ControladorCursosProfesores {
                 .orElse(null);
 
         if (asignacionAEliminar == null) {
-            JOptionPane.showMessageDialog(vista, "No se encontró la asignación en el modelo.");
+            notificadorMensajes.firePropertyChange("mensaje", null, "No se encontró la asignación.");
             return;
         }
 
-        int confirmacion = JOptionPane.showConfirmDialog(vista, "¿Está seguro de eliminar esta asignación?", "Confirmar", JOptionPane.YES_NO_OPTION);
-        if (confirmacion == JOptionPane.YES_OPTION) {
-            modelo.eliminar(asignacionAEliminar);
-            JOptionPane.showMessageDialog(vista, "Asignación eliminada correctamente.");
-            cargarCursoProfesores();
-        }
+        modelo.eliminar(asignacionAEliminar);
+        cargarCursoProfesores();
+        notificadorMensajes.firePropertyChange("mensaje", null, "Asignación eliminada correctamente.");
     }
 
-    private void seleccionarAsignacion() {
-        int filaSeleccionada = vista.getTablaAsignaciones().getSelectedRow();
-        if (filaSeleccionada != -1) {
-            vista.getTxtAnio().setText(vista.getModeloTabla().getValueAt(filaSeleccionada, 2).toString());
-            vista.getTxtSemestre().setText(vista.getModeloTabla().getValueAt(filaSeleccionada, 3).toString());
-        }
+    public void cargarCursoProfesores() {
+        modelo.cargarDatosDB();
+        List<Object[]> datos = modelo.getListado().stream()
+                .map(asignacion -> new Object[]{
+                        asignacion.getProfesor().getNombreCompleto(),
+                        asignacion.getCurso().getNombre(),
+                        asignacion.getAnio(),
+                        asignacion.getSemestre()
+                }).toList();
+
+        notificadorMensajes.firePropertyChange("datosCursoProfesores", null, datos);
     }
 
-    private void cargarProfesoresEnComboBox() {
+    public void agregarListener(PropertyChangeListener listener) {
+        notificadorMensajes.addPropertyChangeListener(listener);
+    }
+
+    public void cargarProfesores() {
         ProfesorDAO profesorDAO = new ProfesorDAO();
         List<Profesor> profesores = profesorDAO.obtenerTodosLosProfesores();
-        vista.getCmbProfesores().removeAllItems();
-        for (Profesor profesor : profesores) {
-            vista.getCmbProfesores().addItem(profesor);
-        }
+        notificadorMensajes.firePropertyChange("profesoresCargados", null, profesores);
     }
 
-    private void cargarCursosEnComboBox() {
+    public void cargarCursos() {
         CursoDAO cursoDAO = new CursoDAO();
         List<Curso> cursos = cursoDAO.obtenerTodosLosCursos();
-        vista.getCmbCursos().removeAllItems();
-        for (Curso curso : cursos) {
-            vista.getCmbCursos().addItem(curso);
-        }
+        notificadorMensajes.firePropertyChange("cursosCargados", null, cursos);
     }
 }

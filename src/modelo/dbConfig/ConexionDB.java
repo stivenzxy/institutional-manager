@@ -49,9 +49,6 @@ public class ConexionDB {
             System.out.println("Cargando script desde: " + scriptPath.toAbsolutePath());
 
             String scriptSql = Files.readString(scriptPath);
-            System.out.println("Contenido del script:");
-            System.out.println(scriptSql);
-
             ejecutarScriptSQL(scriptSql);
         } catch (IOException e) {
             System.err.println("Error al cargar el script de la base de datos: " + e.getMessage());
@@ -65,7 +62,6 @@ public class ConexionDB {
 
             for (String sql : scriptSql.split(";")) {
                 if (!sql.trim().isEmpty()) {
-                    System.out.println("Ejecutando: " + sql);
                     stmt.execute(sql);
                 }
             }
@@ -75,7 +71,6 @@ public class ConexionDB {
             System.err.println("Error ejecutando el script: " + e.getMessage());
         }
     }
-
 
     @SuppressWarnings("SqlSourceToSinkFlow")
     public static void ejecutarSentenciaParametrizada(String sql, Object... valores) {
