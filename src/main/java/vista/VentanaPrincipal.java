@@ -13,11 +13,10 @@ public class VentanaPrincipal extends JFrame {
 
         tabbedPane = new JTabbedPane();
 
-        GestionPersonasGUI gestionPersonasGUI = new GestionPersonasGUI();
         GestionCursosProfesoresGUI gestionCursosProfesoresGUI = new GestionCursosProfesoresGUI();
         GestionCursosEstudiantesGUI gestionCursosEstudiantesGUI = new GestionCursosEstudiantesGUI();
 
-        tabbedPane.addTab("Gestión de Personas", gestionPersonasGUI);
+
         tabbedPane.addTab("Gestión de Cursos y Profesores", gestionCursosProfesoresGUI);
         tabbedPane.addTab("Inscripción de Cursos", gestionCursosEstudiantesGUI);
 
@@ -28,7 +27,7 @@ public class VentanaPrincipal extends JFrame {
                 gestionCursosProfesoresGUI.actualizarListaProfesores();
             }
         });
-
+        
         add(tabbedPane);
     }
 }

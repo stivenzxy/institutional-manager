@@ -1,6 +1,7 @@
 package DAO;
 
 import modelo.dbConfig.ConexionDB;
+import modelo.entidades.Estudiante;
 import modelo.entidades.Profesor;
 
 import java.sql.*;
@@ -11,15 +12,31 @@ import java.util.logging.Logger;
 
 public class ProfesorDAO {
     private static final Logger logger = Logger.getLogger(ProfesorDAO.class.getName());
+    PersonaDAO personaDAO;
 
-    public ProfesorDAO() {}
+    public ProfesorDAO() {
+        personaDAO = new PersonaDAO();
+    }
+
+    public void insertar(Profesor profesor) {
+        double idPersona = personaDAO.insertar(profesor);
+
+        String sql = "INSERT INTO profesores (id, tipoContrato) VALUES (?, ?)";
+        ConexionDB.obtenerInstancia().ejecutarSentenciaParametrizada(sql, idPersona, profesor.getTipoContrato());
+    }
+
+    public void eliminar(Profesor profesor) {
+        double idProfesor = profesor.getID();
+        String sql = "DELETE FROM profesores WHERE id = ?";
+        ConexionDB.obtenerInstancia().ejecutarSentenciaParametrizada(sql, idProfesor);
+    }
 
     public Profesor obtenerProfesorPorId(double id) {
         String sql = "SELECT p.id, p.nombres, p.apellidos, p.email, pr.tipoContrato " +
                 "FROM profesores pr " +
                 "JOIN personas p ON pr.id = p.id " +
                 "WHERE pr.id = ?";
-        try (Connection conn = ConexionDB.getConexion();
+        try (Connection conn = ConexionDB.obtenerInstancia().getConexion();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setDouble(1, id);
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -44,7 +61,7 @@ public class ProfesorDAO {
         String sql = "SELECT p.id, p.nombres, p.apellidos, p.email, pr.tipoContrato " +
                 "FROM profesores pr " +
                 "JOIN personas p ON pr.id = p.id";
-        try (Connection conn = ConexionDB.getConexion();
+        try (Connection conn = ConexionDB.obtenerInstancia().getConexion();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {

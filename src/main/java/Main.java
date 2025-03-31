@@ -1,14 +1,6 @@
-import controlador.ControladorCursosEstudiantes;
-import controlador.ControladorCursosProfesores;
 import modelo.dbConfig.ConexionDB;
-import modelo.relaciones.CursosInscritos;
-import modelo.relaciones.CursosProfesores;
-import vista.GestionCursosEstudiantesGUI;
-import vista.GestionCursosProfesoresGUI;
-import vista.GestionPersonasGUI;
-import controlador.ControladorPersonas;
-import modelo.relaciones.InscripcionesPersonas;
 import vista.VentanaPrincipal;
+import vista.VistaEstudiantes;
 
 import javax.swing.*;
 
@@ -20,15 +12,10 @@ import javax.swing.*;
 public class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
-            ConexionDB.inicializarBaseDeDatos();
+            VistaEstudiantes vistaEstudiantes = new VistaEstudiantes();
+            ConexionDB.obtenerInstancia().inicializarBaseDeDatos();
 
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                System.out.println("Cerrando la conexión antes de salir...");
-                ConexionDB.finalizarConexion();
-            }));
-
-            ventanaPrincipal.setVisible(true);
+            vistaEstudiantes.setVisible(true);
         });
     }
 }

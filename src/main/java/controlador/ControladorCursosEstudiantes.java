@@ -86,7 +86,7 @@ public class ControladorCursosEstudiantes {
     }
 
     public void cargarInscripciones() {
-        modelo.cargarDatosDB();
+        modelo.cargarDatosH2();
         List<Object[]> datos = modelo.getListado().stream()
                 .map(inscripcion -> new Object[]{
                         inscripcion.getID(),

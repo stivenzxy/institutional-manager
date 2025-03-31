@@ -3,7 +3,7 @@ package modelo.entidades;
 
 import java.io.Serializable;
 
-public class Persona implements Serializable { // Serializable convierte la clase en un flujo de bytes
+public abstract class Persona implements Serializable {
     private double ID;
     private String nombres;
     private String apellidos;

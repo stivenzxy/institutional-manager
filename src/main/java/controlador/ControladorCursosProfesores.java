@@ -6,10 +6,7 @@ import modelo.entidades.Profesor;
 import modelo.institucion.Curso;
 import modelo.relaciones.CursoProfesor;
 import modelo.relaciones.CursosProfesores;
-import vista.GestionCursosProfesoresGUI;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
@@ -70,7 +67,7 @@ public class ControladorCursosProfesores {
     }
 
     public void cargarCursoProfesores() {
-        modelo.cargarDatosDB();
+        modelo.cargarDatosH2();
         List<Object[]> datos = modelo.getListado().stream()
                 .map(asignacion -> new Object[]{
                         asignacion.getProfesor().getNombreCompleto(),

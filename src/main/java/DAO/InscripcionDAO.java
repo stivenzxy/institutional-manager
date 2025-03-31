@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static modelo.dbConfig.ConexionDB.ejecutarSentenciaParametrizada;
-
 public class InscripcionDAO {
     private static final Logger logger = Logger.getLogger(InscripcionDAO.class.getName());
 
@@ -20,7 +18,7 @@ public class InscripcionDAO {
 
     public void insertarInscripcion(Inscripcion inscripcion) {
         String sql = "INSERT INTO inscripciones (curso_id, estudiante_id, anio, semestre) VALUES (?, ?, ?, ?)";
-        ejecutarSentenciaParametrizada(sql,
+        ConexionDB.obtenerInstancia().ejecutarSentenciaParametrizada(sql,
                 inscripcion.getCurso().getID(),
                 inscripcion.getEstudiante().getID(),
                 inscripcion.getAnio(),
@@ -30,7 +28,7 @@ public class InscripcionDAO {
 
     public void actualizarInscripcion(Inscripcion inscripcion) {
         String sql = "UPDATE inscripciones SET curso_id = ?, estudiante_id = ?, anio = ?, semestre = ? WHERE id = ?";
-        ejecutarSentenciaParametrizada(sql,
+        ConexionDB.obtenerInstancia().ejecutarSentenciaParametrizada(sql,
                 inscripcion.getCurso().getID(),
                 inscripcion.getEstudiante().getID(),
                 inscripcion.getAnio(),
@@ -41,7 +39,7 @@ public class InscripcionDAO {
 
     public void eliminarInscripcion(Inscripcion inscripcion) {
         String sql = "DELETE FROM inscripciones WHERE id = ?";
-        ejecutarSentenciaParametrizada(sql, inscripcion.getID());
+        ConexionDB.obtenerInstancia().ejecutarSentenciaParametrizada(sql, inscripcion.getID());
     }
 
     public List<Inscripcion> obtenerTodasLasInscripciones() {
@@ -58,7 +56,7 @@ public class InscripcionDAO {
         JOIN personas p ON e.id = p.id
     """;
 
-        try (Connection conn = ConexionDB.getConexion();
+        try (Connection conn = ConexionDB.obtenerInstancia().getConexion();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
 
@@ -69,7 +67,6 @@ public class InscripcionDAO {
                 );
 
                 Estudiante estudiante = new Estudiante(
-                        rs.getDouble("estudiante_id"),
                         rs.getString("estudiante_nombre"),
                         rs.getString("estudiante_apellido"),
                         rs.getString("estudiante_email"),
@@ -78,6 +75,7 @@ public class InscripcionDAO {
                         rs.getDouble("estudiante_promedio"),
                         null
                 );
+                estudiante.setID(rs.getDouble("estudiante_id"));
 
                 Inscripcion inscripcion = new Inscripcion(
                         rs.getDouble("inscripcion_id"),

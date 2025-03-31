@@ -11,11 +11,13 @@ import java.util.logging.Logger;
 public class ProgramaDAO {
     private static final Logger logger = Logger.getLogger(ProgramaDAO.class.getName());
 
+    public ProgramaDAO() {}
+
     public List<Programa> obtenerTodosLosProgramas() {
         List<Programa> programas = new ArrayList<>();
         String sql = "SELECT id, nombre FROM programas";
 
-        try (Connection conn = ConexionDB.getConexion();
+        try (Connection conn = ConexionDB.obtenerInstancia().getConexion();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
 

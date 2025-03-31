@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static modelo.dbConfig.ConexionDB.ejecutarSentenciaParametrizada;
-
 public class CursoDAO {
     private static final Logger logger = Logger.getLogger(CursoDAO.class.getName());
 
@@ -19,17 +17,17 @@ public class CursoDAO {
 
     public void insertarCurso(Curso curso) {
         String sql = "INSERT INTO cursos (id, nombre, activo, programa_id) VALUES (?, ?, ?, ?)";
-        ejecutarSentenciaParametrizada(sql, curso.getID(), curso.getNombre(), curso.isActivo(), curso.getPrograma().getID());
+        ConexionDB.obtenerInstancia().ejecutarSentenciaParametrizada(sql, curso.getID(), curso.getNombre(), curso.isActivo(), curso.getPrograma().getID());
     }
 
     public void actualizarCurso(Curso curso) {
         String sql = "UPDATE cursos SET nombre = ?, activo = ?, programa_id = ? WHERE id = ?";
-        ejecutarSentenciaParametrizada(sql, curso.getNombre(), curso.isActivo(), curso.getPrograma().getID(), curso.getID());
+        ConexionDB.obtenerInstancia().ejecutarSentenciaParametrizada(sql, curso.getNombre(), curso.isActivo(), curso.getPrograma().getID(), curso.getID());
     }
 
     public void eliminarCurso(int id) {
         String sql = "DELETE FROM cursos WHERE id = ?";
-        ejecutarSentenciaParametrizada(sql, id);
+        ConexionDB.obtenerInstancia().ejecutarSentenciaParametrizada(sql, id);
     }
 
     public List<Curso> obtenerCursosPorPrograma(double programaId) {
@@ -39,7 +37,7 @@ public class CursoDAO {
                 "JOIN programas p ON c.programa_id = p.id " +
                 "WHERE p.id = ?";
 
-        try (Connection conn = ConexionDB.getConexion();
+        try (Connection conn = ConexionDB.obtenerInstancia().getConexion();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setDouble(1, programaId);
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -60,7 +58,7 @@ public class CursoDAO {
                 "FROM cursos c " +
                 "JOIN programas p ON c.programa_id = p.id";
 
-        try (Connection conn = ConexionDB.getConexion();
+        try (Connection conn = ConexionDB.obtenerInstancia().getConexion();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {

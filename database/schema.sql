@@ -28,11 +28,12 @@ CREATE TABLE IF NOT EXISTS profesores (
 );
 
 CREATE TABLE IF NOT EXISTS estudiantes (
-        id INT PRIMARY KEY,
+        id INT,
         codigo BIGINT NOT NULL,
         activo BOOLEAN NOT NULL,
         promedio DECIMAL(3,2) NOT NULL,
         programa_id INT NOT NULL,
+        PRIMARY KEY (id, codigo),
         FOREIGN KEY (id) REFERENCES personas(id) ON DELETE CASCADE,
         FOREIGN KEY (programa_id) REFERENCES programas(id) ON DELETE RESTRICT
 );

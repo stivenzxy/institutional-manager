@@ -1,6 +1,7 @@
 package modelo.institucion;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Programa implements Serializable {
     private double ID;
@@ -60,6 +61,14 @@ public class Programa implements Serializable {
 
     public void setFacultad(Facultad facultad) {
         this.facultad = facultad;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Programa programa = (Programa) obj;
+        return Objects.equals(nombre, programa.nombre);
     }
 
     @Override

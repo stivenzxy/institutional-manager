@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static modelo.dbConfig.ConexionDB.ejecutarSentenciaParametrizada;
-
 public class CursoProfesorDAO {
     private static final Logger logger = Logger.getLogger(CursoProfesorDAO.class.getName());
 
@@ -25,12 +23,12 @@ public class CursoProfesorDAO {
 
         String sql = "INSERT INTO curso_profesor (curso_id, profesor_id, anio, semestre) VALUES (?,?,?,?)";
 
-        ejecutarSentenciaParametrizada(sql, cursoProfesor.getCurso().getID(), cursoProfesor.getProfesor().getID(), cursoProfesor.getAnio(), cursoProfesor.getSemestre());
+        ConexionDB.obtenerInstancia().ejecutarSentenciaParametrizada(sql, cursoProfesor.getCurso().getID(), cursoProfesor.getProfesor().getID(), cursoProfesor.getAnio(), cursoProfesor.getSemestre());
     }
 
     public void eliminarAsignacion(CursoProfesor cursoProfesor) {
         String sql = "DELETE FROM curso_profesor WHERE curso_id = ? AND profesor_id = ?";
-        ejecutarSentenciaParametrizada(sql, cursoProfesor.getCurso().getID(), cursoProfesor.getProfesor().getID());
+        ConexionDB.obtenerInstancia().ejecutarSentenciaParametrizada(sql, cursoProfesor.getCurso().getID(), cursoProfesor.getProfesor().getID());
     }
 
     public List<CursoProfesor> obtenerTodasLasAsignaciones() {
@@ -43,7 +41,7 @@ public class CursoProfesorDAO {
                 "JOIN profesores pr ON cp.profesor_id = pr.id " +
                 "JOIN personas p ON pr.id = p.id";
 
-        try (Connection conn = ConexionDB.getConexion();
+        try (Connection conn = ConexionDB.obtenerInstancia().getConexion();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
@@ -69,7 +67,7 @@ public class CursoProfesorDAO {
     public boolean existeAsignacion(int cursoId, double profesorId) {
         String sql = "SELECT COUNT(*) FROM curso_profesor WHERE curso_id = ? AND profesor_id = ?";
 
-        try (Connection conn = ConexionDB.getConexion();
+        try (Connection conn = ConexionDB.obtenerInstancia().getConexion();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, cursoId);
