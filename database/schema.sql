@@ -28,18 +28,18 @@ CREATE TABLE IF NOT EXISTS profesores (
 );
 
 CREATE TABLE IF NOT EXISTS estudiantes (
-        id INT,
-        codigo BIGINT NOT NULL,
+        id INT PRIMARY KEY ,
+        codigo BIGINT NOT NULL UNIQUE,
         activo BOOLEAN NOT NULL,
         promedio DECIMAL(3,2) NOT NULL,
         programa_id INT NOT NULL,
-        PRIMARY KEY (id, codigo),
         FOREIGN KEY (id) REFERENCES personas(id) ON DELETE CASCADE,
         FOREIGN KEY (programa_id) REFERENCES programas(id) ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS cursos (
         id INT AUTO_INCREMENT PRIMARY KEY,
+        codigo BIGINT NOT NULL UNIQUE,
         nombre VARCHAR(100) NOT NULL,
         activo BOOLEAN NOT NULL,
         programa_id INT NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS inscripciones (
         curso_id INT NOT NULL,
         estudiante_id INT NOT NULL,
         anio INT NOT NULL,
-        semestre INT NOT NULL,
+        periodo INT NOT NULL,
         FOREIGN KEY (curso_id) REFERENCES cursos(id) ON DELETE RESTRICT,
         FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id) ON DELETE CASCADE
 );
@@ -84,6 +84,6 @@ MERGE INTO profesores (id, tipoContrato) KEY(id) VALUES (2, 'Catedrático');
 MERGE INTO estudiantes (id, codigo, activo, promedio, programa_id) KEY(id) VALUES
         (3, 160004725, TRUE, 3.6, 1);
 
-MERGE INTO cursos (id, nombre, activo, programa_id) KEY(id) VALUES
-        (1, 'Tecnologías Avanzadas', TRUE, 1),
-        (2, 'Procesos Estocásticos', TRUE, 1);
+MERGE INTO cursos (codigo, nombre, activo, programa_id) KEY (codigo) VALUES
+        (1020, 'Tecnologías Avanzadas', TRUE, 1),
+        (4150, 'Procesos Estocásticos', TRUE, 1);

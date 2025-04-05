@@ -31,27 +31,45 @@ public class ProfesorDAO {
         ConexionDB.obtenerInstancia().ejecutarSentenciaParametrizada(sql, idProfesor);
     }
 
-    public Profesor obtenerProfesorPorId(double id) {
+    public Profesor buscarPorId(double idProfesor) {
         String sql = "SELECT p.id, p.nombres, p.apellidos, p.email, pr.tipoContrato " +
                 "FROM profesores pr " +
                 "JOIN personas p ON pr.id = p.id " +
                 "WHERE pr.id = ?";
         try (Connection conn = ConexionDB.obtenerInstancia().getConexion();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setDouble(1, id);
+            pstmt.setDouble(1, idProfesor);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    return new Profesor(
-                            rs.getDouble("id"),
+                    Profesor profesor = new Profesor(
                             rs.getString("nombres"),
                             rs.getString("apellidos"),
                             rs.getString("email"),
                             rs.getString("tipoContrato")
                     );
+
+                    profesor.setID(rs.getDouble("id"));
+                    return profesor;
                 }
             }
         } catch (SQLException exception) {
             logger.log(Level.SEVERE, "Error al obtener profesor por ID", exception);
+        }
+        return null;
+    }
+
+    public Double obtenerIdProfesorPorEmail(String email) {
+        String sql = "SELECT p.id FROM profesores pr JOIN personas p ON pr.id = p.id WHERE p.email = ?";
+        try (Connection conn = ConexionDB.obtenerInstancia().getConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, email);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble("id");
+                }
+            }
+        } catch (SQLException exception) {
+            logger.log(Level.SEVERE, "Error al obtener el ID del profesor por email", exception);
         }
         return null;
     }
@@ -65,13 +83,15 @@ public class ProfesorDAO {
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
-                profesores.add(new Profesor(
-                        rs.getDouble("id"),
+                Profesor profesor = new Profesor(
                         rs.getString("nombres"),
                         rs.getString("apellidos"),
                         rs.getString("email"),
                         rs.getString("tipoContrato")
-                ));
+                );
+
+                profesor.setID(rs.getDouble("id"));
+                profesores.add(profesor);
             }
         } catch (SQLException exception) {
             logger.log(Level.SEVERE, "Error al obtener todos los profesores", exception);

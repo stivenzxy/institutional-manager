@@ -16,45 +16,52 @@ public class CursoDAO {
     public CursoDAO() {}
 
     public void insertarCurso(Curso curso) {
-        String sql = "INSERT INTO cursos (id, nombre, activo, programa_id) VALUES (?, ?, ?, ?)";
-        ConexionDB.obtenerInstancia().ejecutarSentenciaParametrizada(sql, curso.getID(), curso.getNombre(), curso.isActivo(), curso.getPrograma().getID());
+        String sql = "INSERT INTO cursos (codigo, nombre, activo, programa_id) VALUES (?, ?, ?, ?)";
+        System.out.println("insert from cursos");
+        ConexionDB.obtenerInstancia().ejecutarSentenciaParametrizada(sql, curso.getCodigo(), curso.getNombre(), curso.isActivo(), curso.getPrograma().getID());
     }
 
     public void actualizarCurso(Curso curso) {
-        String sql = "UPDATE cursos SET nombre = ?, activo = ?, programa_id = ? WHERE id = ?";
-        ConexionDB.obtenerInstancia().ejecutarSentenciaParametrizada(sql, curso.getNombre(), curso.isActivo(), curso.getPrograma().getID(), curso.getID());
+        String sql = "UPDATE cursos SET nombre = ?, activo = ?, programa_id = ? WHERE codigo = ?";
+        ConexionDB.obtenerInstancia().ejecutarSentenciaParametrizada(sql, curso.getNombre(), curso.isActivo(), curso.getPrograma().getID(), curso.getCodigo());
     }
 
-    public void eliminarCurso(int id) {
-        String sql = "DELETE FROM cursos WHERE id = ?";
-        ConexionDB.obtenerInstancia().ejecutarSentenciaParametrizada(sql, id);
+    public void eliminarCurso(Curso curso) {
+        double codigoCurso = curso.getCodigo();
+        String sql = "DELETE FROM cursos WHERE codigo = ?";
+        System.out.println("delete from h2 cursos");
+        ConexionDB.obtenerInstancia().ejecutarSentenciaParametrizada(sql, codigoCurso);
     }
 
-    public List<Curso> obtenerCursosPorPrograma(double programaId) {
-        List<Curso> cursos = new ArrayList<>();
-        String sql = "SELECT c.id, c.nombre, c.activo, p.id AS programa_id, p.nombre AS nombre_programa " +
+    public Curso buscarPorCodigo(double codigo) {
+        String sql = "SELECT c.id, c.codigo, c.nombre, c.activo, p.id AS programa_id, p.nombre AS nombre_programa " +
                 "FROM cursos c " +
                 "JOIN programas p ON c.programa_id = p.id " +
-                "WHERE p.id = ?";
+                "WHERE c.codigo = ?";
 
         try (Connection conn = ConexionDB.obtenerInstancia().getConexion();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setDouble(1, programaId);
+
+            pstmt.setDouble(1, codigo);
             try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
+                if (rs.next()) {
                     Programa programa = new Programa(rs.getDouble("programa_id"), rs.getString("nombre_programa"));
-                    cursos.add(new Curso(rs.getInt("id"), rs.getString("nombre"), programa, rs.getBoolean("activo")));
+                    Curso curso = new Curso(rs.getDouble("codigo"),rs.getString("nombre"), programa, rs.getBoolean("activo")
+                    );
+
+                    curso.setID(rs.getInt("id"));
+                    return curso;
                 }
             }
         } catch (SQLException exception) {
-            logger.log(Level.SEVERE, "Error al obtener cursos por programa", exception);
+            logger.log(Level.SEVERE, "Error al obtener el curso con código: " + codigo, exception);
         }
-        return cursos;
+        return null;
     }
 
     public List<Curso> obtenerTodosLosCursos() {
         List<Curso> cursos = new ArrayList<>();
-        String sql = "SELECT c.id, c.nombre, c.activo, p.id AS programa_id, p.nombre AS nombre_programa " +
+        String sql = "SELECT c.id, c.codigo, c.nombre, c.activo, p.id AS programa_id, p.nombre AS nombre_programa " +
                 "FROM cursos c " +
                 "JOIN programas p ON c.programa_id = p.id";
 
@@ -63,7 +70,7 @@ public class CursoDAO {
              ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
                 Programa programa = new Programa(rs.getDouble("programa_id"), rs.getString("nombre_programa"));
-                cursos.add(new Curso(rs.getInt("id"), rs.getString("nombre"), programa, rs.getBoolean("activo")));
+                cursos.add(new Curso(rs.getDouble("codigo"), rs.getString("nombre"), programa, rs.getBoolean("activo")));
             }
         } catch (SQLException exception) {
             logger.log(Level.SEVERE, "Error al obtener todos los cursos", exception);

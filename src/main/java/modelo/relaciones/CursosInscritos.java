@@ -1,7 +1,7 @@
 package modelo.relaciones;
 
 import DAO.InscripcionDAO;
-import servicios.Servicios;
+import interfaces.Servicios;
 import modelo.institucion.Inscripcion;
 
 import java.util.ArrayList;
@@ -27,47 +27,6 @@ public class CursosInscritos implements Servicios {
     public void inscribir(Inscripcion inscripcion) {
         listado.add(inscripcion);
         inscripcionDAO.insertarInscripcion(inscripcion);
-    }
-
-    public void actualizar(Inscripcion inscripcion) {
-        if (inscripcion == null) {
-            System.out.println("Error: La inscripcion que intenta actualizar no existe.");
-            return;
-        }
-
-        boolean actualizado = false;
-        cargarDatosH2();
-
-        for (int i = 0; i < listado.size(); i++) {
-            if (listado.get(i).getID() == inscripcion.getID()) {
-                listado.set(i, inscripcion);
-                actualizado = true;
-                break;
-            }
-        }
-
-        if (actualizado) {
-            inscripcionDAO.actualizarInscripcion(inscripcion);
-            System.out.println("La inscripción " + inscripcion.getID() + " se ha actualizado correctamente.");
-        } else {
-            System.out.println("No se encontró la inscripción en el listado.");
-        }
-    }
-
-    public void eliminar(Inscripcion inscripcion) {
-        if (inscripcion == null) {
-            System.out.println("Error: La inscripción que intenta eliminar de la lista no existe.");
-            return;
-        }
-
-        cargarDatosH2();
-
-        if (listado.removeIf(i -> i.getID() == inscripcion.getID())) {
-            System.out.println("El estudiante " + inscripcion.getEstudiante().getNombres() + " ha cancelado su inscripción al curso " + inscripcion.getCurso().getNombre() + ".");
-            inscripcionDAO.eliminarInscripcion(inscripcion);
-        } else {
-            System.out.println("No se encontró la persona en el listado.");
-        }
     }
 
     public void cargarDatosH2() {

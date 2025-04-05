@@ -19,35 +19,35 @@ public class ControladorEstudiantes {
         notificadorMensajes = new PropertyChangeSupport(this);
     }
 
-    private Estudiante construirObjetoEstudiante(Map<String, Object> datosForm) {
-        String nombres = (String) datosForm.get("nombre");
-        String apellidos = (String) datosForm.get("apellidos");
-        String email = (String) datosForm.get("email");
-        double codigo = Double.parseDouble((String) datosForm.get("codigo"));
-        boolean activo = (Boolean) datosForm.get("activo");
-        double promedio = Double.parseDouble((String) datosForm.get("promedio"));
-        Programa programa = (Programa) datosForm.get("programa");
+    private Estudiante construirObjetoEstudiante(Map<String, Object> datosFormulario) {
+        String nombres = (String) datosFormulario.get("nombres");
+        String apellidos = (String) datosFormulario.get("apellidos");
+        String email = (String) datosFormulario.get("email");
+        double codigo = Double.parseDouble((String) datosFormulario.get("codigo"));
+        boolean activo = (Boolean) datosFormulario.get("activo");
+        double promedio = Double.parseDouble((String) datosFormulario.get("promedio"));
+        Programa programa = (Programa) datosFormulario.get("programa");
 
         return new Estudiante(nombres, apellidos, email, codigo, activo, promedio, programa);
     }
 
-    public void guardarEstudiante(Map<String, Object> datosForm) {
+    public void guardarEstudiante(Map<String, Object> datosFormulario) {
         try {
-            if(datosForm == null || datosForm.isEmpty()) {
+            if(datosFormulario == null || datosFormulario.isEmpty()) {
                 throw new IllegalArgumentException("Faltan datos en el formulario, complete todos los campos.");
             }
 
-            Estudiante estudiante = construirObjetoEstudiante(datosForm);
+            Estudiante estudiante = construirObjetoEstudiante(datosFormulario);
             modelo.inscribirEstudiante(estudiante);
             notificadorMensajes.firePropertyChange("mensaje", null, "Estudiante guardado exitosamente!");
-        } catch (IllegalArgumentException excepcion) {
-            notificadorMensajes.firePropertyChange("mensaje", null, excepcion.getMessage());
+        } catch (IllegalArgumentException exception) {
+            notificadorMensajes.firePropertyChange("mensaje", null, exception.getMessage());
         }
     }
 
     public void eliminarEstudiante(double codigoEstudiante) {
         if(codigoEstudiante <= 0) {
-            notificadorMensajes.firePropertyChange("mensaje", null, "Código Invalido: El código debe ser mayor que 0");
+            notificadorMensajes.firePropertyChange("mensaje", null, "Código Inválido");
             return;
         }
 
@@ -73,9 +73,8 @@ public class ControladorEstudiantes {
         return estudianteEncontrado;
     }
 
-
-    public void cargarEstudiantes() {
-        modelo.cargarDatosH2();
+    public List<Estudiante> cargarEstudiantes() {
+        return modelo.cargarDatosH2();
     }
 
     public void cargarProgramas() {

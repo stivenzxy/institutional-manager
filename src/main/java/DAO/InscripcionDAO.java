@@ -17,22 +17,22 @@ public class InscripcionDAO {
     public InscripcionDAO() {}
 
     public void insertarInscripcion(Inscripcion inscripcion) {
-        String sql = "INSERT INTO inscripciones (curso_id, estudiante_id, anio, semestre) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO inscripciones (curso_id, estudiante_id, anio, periodo) VALUES (?, ?, ?, ?)";
         ConexionDB.obtenerInstancia().ejecutarSentenciaParametrizada(sql,
                 inscripcion.getCurso().getID(),
                 inscripcion.getEstudiante().getID(),
                 inscripcion.getAnio(),
-                inscripcion.getSemestre()
+                inscripcion.getPeriodo()
         );
     }
 
     public void actualizarInscripcion(Inscripcion inscripcion) {
-        String sql = "UPDATE inscripciones SET curso_id = ?, estudiante_id = ?, anio = ?, semestre = ? WHERE id = ?";
+        String sql = "UPDATE inscripciones SET curso_id = ?, estudiante_id = ?, anio = ?, periodo = ? WHERE id = ?";
         ConexionDB.obtenerInstancia().ejecutarSentenciaParametrizada(sql,
                 inscripcion.getCurso().getID(),
                 inscripcion.getEstudiante().getID(),
                 inscripcion.getAnio(),
-                inscripcion.getSemestre(),
+                inscripcion.getPeriodo(),
                 inscripcion.getID()
         );
     }
@@ -45,7 +45,7 @@ public class InscripcionDAO {
     public List<Inscripcion> obtenerTodasLasInscripciones() {
         List<Inscripcion> inscripciones = new ArrayList<>();
         String sql = """
-        SELECT i.id AS inscripcion_id, i.anio, i.semestre,
+        SELECT i.id AS inscripcion_id, i.anio, i.PERIODO,
                c.id AS curso_id, c.nombre AS curso_nombre,
                e.id AS estudiante_id, e.codigo AS estudiante_codigo,
                p.nombres AS estudiante_nombre, p.apellidos AS estudiante_apellido, p.email AS estudiante_email,
@@ -81,7 +81,7 @@ public class InscripcionDAO {
                         rs.getDouble("inscripcion_id"),
                         curso,
                         rs.getInt("anio"),
-                        rs.getInt("semestre"),
+                        rs.getInt("periodo"),
                         estudiante
                 );
 

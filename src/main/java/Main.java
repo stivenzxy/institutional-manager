@@ -1,6 +1,5 @@
 import modelo.dbConfig.ConexionDB;
-import vista.VentanaPrincipal;
-import vista.VistaEstudiantes;
+import vista.ventanas.EstudianteDetalle;
 
 import javax.swing.*;
 
@@ -12,10 +11,10 @@ import javax.swing.*;
 public class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            VistaEstudiantes vistaEstudiantes = new VistaEstudiantes();
             ConexionDB.obtenerInstancia().inicializarBaseDeDatos();
+            EstudianteDetalle estudianteDetalle = new EstudianteDetalle();
 
-            vistaEstudiantes.setVisible(true);
+            estudianteDetalle.setVisible(true);
         });
     }
 }

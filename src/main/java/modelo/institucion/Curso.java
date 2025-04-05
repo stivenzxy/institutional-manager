@@ -4,12 +4,13 @@ import java.io.Serializable;
 
 public class Curso implements Serializable {
     private int ID;
+    private double codigo;
     private String nombre;
     private Programa programa;
     private boolean activo;
 
-    public Curso(int ID, String nombre, Programa programa, boolean activo) {
-        this.ID = ID;
+    public Curso(double codigo, String nombre, Programa programa, boolean activo) {
+        this.codigo = codigo;
         this.nombre = nombre;
         this.programa = programa;
         this.activo = activo;
@@ -27,6 +28,9 @@ public class Curso implements Serializable {
     public void setID(int ID) {
         this.ID = ID;
     }
+
+    public double getCodigo() { return codigo; }
+    public void setCodigo(double codigo) { this.codigo = codigo; }
 
     public String getNombre() {
         return nombre;

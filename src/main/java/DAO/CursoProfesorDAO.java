@@ -47,7 +47,6 @@ public class CursoProfesorDAO {
             while (rs.next()) {
                 Curso curso = new Curso(rs.getInt("curso_id"), rs.getString("curso_nombre"));
                 Profesor profesor = new Profesor(
-                        rs.getDouble("profesor_id"),
                         rs.getString("nombres"),
                         rs.getString("apellidos"),
                         rs.getString("email"),
@@ -56,6 +55,7 @@ public class CursoProfesorDAO {
                 int anio = rs.getInt("anio");
                 int semestre = rs.getInt("semestre");
 
+                profesor.setID(rs.getDouble("profesor_id"));
                 asignaciones.add(new CursoProfesor(profesor, anio, semestre, curso));
             }
         } catch (SQLException exception) {

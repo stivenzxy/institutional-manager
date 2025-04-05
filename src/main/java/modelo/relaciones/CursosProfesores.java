@@ -1,7 +1,7 @@
 package modelo.relaciones;
 
 import DAO.CursoProfesorDAO;
-import servicios.Servicios;
+import interfaces.Servicios;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,12 +1,13 @@
 package servicios;
 
 import DAO.EstudianteDAO;
+import interfaces.Servicios;
 import modelo.entidades.Estudiante;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class InscripcionesEstudiantes implements Servicios{
+public class InscripcionesEstudiantes implements Servicios {
     private final List<Estudiante> listado;
     private final EstudianteDAO estudianteDAO;
 
@@ -43,17 +44,19 @@ public class InscripcionesEstudiantes implements Servicios{
         return estudianteDAO.buscarPorCodigo(codigo);
     }
 
-    public void cargarDatosH2() {
+    public List<Estudiante> cargarDatosH2() {
         listado.clear();
 
         List<Estudiante> estudiantes = estudianteDAO.obtenerTodosLosEstudiantes();
         listado.addAll(estudiantes);
 
         if (listado.isEmpty()) {
-            System.out.println("No hay datos en la base de datos.");
+            System.out.println("No hay estudiantes registrados en el sistema.");
         } else {
-            System.out.println("Datos de la base de datos cargados exitosamente!");
+            System.out.println("Registros cargados correctamente!");
         }
+
+        return estudiantes;
     }
 
     @Override

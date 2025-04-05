@@ -8,21 +8,21 @@ public class Inscripcion implements Serializable {
     private double ID;
     private Curso curso;
     private int anio;
-    private int semestre;
+    private int periodo;
     private Estudiante estudiante;
 
-    public Inscripcion(double ID,Curso curso, int anio, int semestre, Estudiante estudiante) {
+    public Inscripcion(double ID, Curso curso, int anio, int periodo, Estudiante estudiante) {
         this.ID = ID;
         this.curso = curso;
         this.anio = anio;
-        this.semestre = semestre;
+        this.periodo = periodo;
         this.estudiante = estudiante;
     }
 
-    public Inscripcion(Curso curso, int anio, int semestre, Estudiante estudiante) {
+    public Inscripcion(Curso curso, int anio, int periodo, Estudiante estudiante) {
         this.curso = curso;
         this.anio = anio;
-        this.semestre = semestre;
+        this.periodo = periodo;
         this.estudiante = estudiante;
     }
 
@@ -50,12 +50,12 @@ public class Inscripcion implements Serializable {
         this.anio = anio;
     }
 
-    public int getSemestre() {
-        return semestre;
+    public int getPeriodo() {
+        return periodo;
     }
 
-    public void setSemestre(int semestre) {
-        this.semestre = semestre;
+    public void setPeriodo(int periodo) {
+        this.periodo = periodo;
     }
 
     public Estudiante getEstudiante() {
@@ -72,7 +72,7 @@ public class Inscripcion implements Serializable {
                 "\"ID\": \"" + ID + "\", " +
                 "\"curso\": \"" + curso.getNombre() + "\", " +
                 "\"anio\": " + anio + ", " +
-                "\"semestre\": " + semestre + ", " +
+                "\"periodo\": " + periodo + ", " +
                 "\"estudiante\": { " +
                 "\"nombres\": \"" + estudiante.getNombres() + "\", " +
                 "\"apellidos\": \"" + estudiante.getApellidos() + "\"" +
