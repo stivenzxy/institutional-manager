@@ -21,16 +21,29 @@ public class CursoDAO {
         ConexionDB.obtenerInstancia().ejecutarSentenciaParametrizada(sql, curso.getCodigo(), curso.getNombre(), curso.isActivo(), curso.getPrograma().getID());
     }
 
-    public void actualizarCurso(Curso curso) {
-        String sql = "UPDATE cursos SET nombre = ?, activo = ?, programa_id = ? WHERE codigo = ?";
-        ConexionDB.obtenerInstancia().ejecutarSentenciaParametrizada(sql, curso.getNombre(), curso.isActivo(), curso.getPrograma().getID(), curso.getCodigo());
-    }
-
     public void eliminarCurso(Curso curso) {
         double codigoCurso = curso.getCodigo();
         String sql = "DELETE FROM cursos WHERE codigo = ?";
         System.out.println("delete from h2 cursos");
         ConexionDB.obtenerInstancia().ejecutarSentenciaParametrizada(sql, codigoCurso);
+    }
+
+    public boolean tieneInscripciones(double codigoCurso) {
+        String sql = "SELECT COUNT(*) FROM inscripciones WHERE curso_id = (SELECT id FROM cursos WHERE codigo = ?)";
+
+        try (Connection conn = ConexionDB.obtenerInstancia().getConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setDouble(1, codigoCurso);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException exception) {
+            logger.log(Level.SEVERE, "Error al verificar inscripciones del curso con código: " + codigoCurso, exception);
+        }
+        return false;
     }
 
     public Curso buscarPorCodigo(double codigo) {

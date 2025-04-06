@@ -3,8 +3,8 @@ package controlador;
 import modelo.entidades.Estudiante;
 import modelo.institucion.Curso;
 import modelo.institucion.Inscripcion;
-import modelo.relaciones.CursosInscritos;
-import servicios.GestionCursos;
+import servicios.InscripcionesCursosEstudiantes;
+import servicios.InscripcionesCursos;
 import servicios.InscripcionesEstudiantes;
 
 import java.beans.PropertyChangeListener;
@@ -13,15 +13,15 @@ import java.util.List;
 import java.util.Map;
 
 public class ControladorCursosEstudiantes {
-    private final CursosInscritos modeloCursosInscritos;
+    private final InscripcionesCursosEstudiantes modeloInscripcionesCursosEstudiantes;
     private final InscripcionesEstudiantes modeloEstudiantes;
-    private final GestionCursos modeloCursos;
+    private final InscripcionesCursos modeloCursos;
     private final PropertyChangeSupport notificadorMensajes;
 
     public ControladorCursosEstudiantes() {
-        modeloCursosInscritos = new CursosInscritos();
+        modeloInscripcionesCursosEstudiantes = new InscripcionesCursosEstudiantes();
         modeloEstudiantes = new InscripcionesEstudiantes();
-        modeloCursos = new GestionCursos();
+        modeloCursos = new InscripcionesCursos();
 
         notificadorMensajes = new PropertyChangeSupport(this);
     }
@@ -42,16 +42,15 @@ public class ControladorCursosEstudiantes {
             }
 
             Inscripcion inscripcion = construirObjetoInscripcion(datosFormulario);
-            modeloCursosInscritos.inscribir(inscripcion);
+            modeloInscripcionesCursosEstudiantes.inscribir(inscripcion);
             notificadorMensajes.firePropertyChange("mensaje", null, "Estudiante inscrito exitosamente!");
-            cargarInscripciones();
         } catch (IllegalArgumentException exception) {
             notificadorMensajes.firePropertyChange("mensaje", null, exception.getMessage());
         }
     }
 
-    public void cargarInscripciones() {
-        modeloEstudiantes.cargarDatosH2();
+    public List<Inscripcion> cargarInscripciones() {
+         return modeloInscripcionesCursosEstudiantes.cargarDatosH2();
     }
 
     public Estudiante buscarEstudiante(double codigoEstudiante) {

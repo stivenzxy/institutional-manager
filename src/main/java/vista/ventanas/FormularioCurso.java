@@ -152,7 +152,7 @@ public class FormularioCurso extends JFrame implements PropertyChangeListener, O
     private void eliminarCurso() {
         try {
             double codigo = Double.parseDouble(campoCodigo.getText());
-            controlador.elimnarCurso(codigo);
+            controlador.eliminarCurso(codigo);
             this.notificar();
             limpiarCampos();
         } catch (NumberFormatException e) {

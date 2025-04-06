@@ -3,6 +3,7 @@ package vista.ventanas;
 import controlador.ControladorCursosEstudiantes;
 import modelo.entidades.Estudiante;
 import vista.paneles.FormularioInscripcionCurso;
+import vista.paneles.HistorialInscripcionesPanel;
 import vista.paneles.VistaCursosPanel;
 import vista.paneles.VistaProfesoresPanel;
 
@@ -96,7 +97,7 @@ public class EstudianteDetalle extends JFrame {
 
     private JPanel crearPanelPestanias() {
         tabs = new JTabbedPane(JTabbedPane.TOP);
-        tabs.addTab("Historial Cursos", new JPanel());
+        tabs.addTab("Historial Cursos", new HistorialInscripcionesPanel());
         tabs.addTab("Inscribir Curso", new FormularioInscripcionCurso());
         tabs.addTab("Cursos", new VistaCursosPanel());
         tabs.addTab("Profesores", new VistaProfesoresPanel());

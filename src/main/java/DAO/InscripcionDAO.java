@@ -26,22 +26,6 @@ public class InscripcionDAO {
         );
     }
 
-    public void actualizarInscripcion(Inscripcion inscripcion) {
-        String sql = "UPDATE inscripciones SET curso_id = ?, estudiante_id = ?, anio = ?, periodo = ? WHERE id = ?";
-        ConexionDB.obtenerInstancia().ejecutarSentenciaParametrizada(sql,
-                inscripcion.getCurso().getID(),
-                inscripcion.getEstudiante().getID(),
-                inscripcion.getAnio(),
-                inscripcion.getPeriodo(),
-                inscripcion.getID()
-        );
-    }
-
-    public void eliminarInscripcion(Inscripcion inscripcion) {
-        String sql = "DELETE FROM inscripciones WHERE id = ?";
-        ConexionDB.obtenerInstancia().ejecutarSentenciaParametrizada(sql, inscripcion.getID());
-    }
-
     public List<Inscripcion> obtenerTodasLasInscripciones() {
         List<Inscripcion> inscripciones = new ArrayList<>();
         String sql = """

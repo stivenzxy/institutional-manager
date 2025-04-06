@@ -1,4 +1,4 @@
-package modelo.relaciones;
+package servicios;
 
 import DAO.InscripcionDAO;
 import interfaces.Servicios;
@@ -7,11 +7,11 @@ import modelo.institucion.Inscripcion;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CursosInscritos implements Servicios {
-    private List<Inscripcion> listado;
+public class InscripcionesCursosEstudiantes implements Servicios {
+    private final List<Inscripcion> listado;
     private final InscripcionDAO inscripcionDAO;
 
-    public CursosInscritos() {
+    public InscripcionesCursosEstudiantes() {
         this.inscripcionDAO = new InscripcionDAO();
         this.listado = new ArrayList<>();
     }
@@ -20,16 +20,12 @@ public class CursosInscritos implements Servicios {
         return listado;
     }
 
-    public void setListado(List<Inscripcion> listado) {
-        this.listado = listado;
-    }
-
     public void inscribir(Inscripcion inscripcion) {
         listado.add(inscripcion);
         inscripcionDAO.insertarInscripcion(inscripcion);
     }
 
-    public void cargarDatosH2() {
+    public List<Inscripcion> cargarDatosH2() {
         listado.clear();
 
         List<Inscripcion> inscripciones = inscripcionDAO.obtenerTodasLasInscripciones();
@@ -40,6 +36,8 @@ public class CursosInscritos implements Servicios {
         } else {
             System.out.println("Datos de la base de datos cargados exitosamente!");
         }
+
+        return inscripciones;
     }
 
     @Override

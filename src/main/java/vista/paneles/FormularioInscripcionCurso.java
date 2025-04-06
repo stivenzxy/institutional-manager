@@ -1,28 +1,36 @@
 package vista.paneles;
 
 import controlador.ControladorCursosEstudiantes;
+import interfaces.Observable;
+import interfaces.Observador;
 import modelo.entidades.Estudiante;
 import modelo.institucion.Curso;
+import vista.ventanas.FormularioCurso;
+import vista.ventanas.FormularioEstudiante;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class FormularioInscripcionCurso extends JPanel {
-    private JTextField campoCodigo;
-    private JButton botonBuscar;
-    private JTextField campoCurso;
-    private JTextField campoAnio;
-    private JComboBox<String> selectorPeriodo;
-    private JButton botonInscribir;
+public class FormularioInscripcionCurso extends JPanel implements Observable {
+    private final JTextField campoCodigo;
+    private final JTextField campoCurso;
+    private final JTextField campoAnio;
+    private final JComboBox<String> selectorPeriodo;
 
-    private Curso cursoSeleccionado;
     private Estudiante estudiante;
     private final ControladorCursosEstudiantes controlador;
 
+    private static FormularioInscripcionCurso instancia;
+    private final List<Observador> listadoDeObservadores;
+
     public FormularioInscripcionCurso() {
         controlador = new ControladorCursosEstudiantes();
+        listadoDeObservadores = new ArrayList<>();
 
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -40,7 +48,7 @@ public class FormularioInscripcionCurso extends JPanel {
         int fila = 1;
 
         campoCodigo = new JTextField(10);
-        botonBuscar = new JButton("Buscar");
+        JButton botonBuscar = new JButton("Buscar");
         agregarCampo(this, gbc, "Código:", campoCodigo, fila++);
         gbc.gridx = 2;
         add(botonBuscar, gbc);
@@ -63,7 +71,7 @@ public class FormularioInscripcionCurso extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = fila;
         gbc.gridwidth = 2;
-        botonInscribir = new JButton("Inscribir");
+        JButton botonInscribir = new JButton("Inscribir");
         add(botonInscribir, gbc);
 
         botonBuscar.addActionListener(evento -> buscarCurso());
@@ -78,6 +86,30 @@ public class FormularioInscripcionCurso extends JPanel {
 
         gbc.gridx = 1;
         panel.add(componente, gbc);
+    }
+
+    public static FormularioInscripcionCurso getInstancia() {
+        if (instancia == null) {
+            instancia = new FormularioInscripcionCurso();
+        }
+        return instancia;
+    }
+
+    @Override
+    public void notificar() {
+        for (Observador observador : listadoDeObservadores) {
+            observador.actualizar();
+        }
+    }
+
+    @Override
+    public void adicionarObservador(Observador observador) {
+        listadoDeObservadores.add(observador);
+    }
+
+    @Override
+    public void removerObservador(Observador observador) {
+        listadoDeObservadores.remove(observador);
     }
 
     public void setEstudiante(Estudiante estudiante) {
@@ -113,6 +145,7 @@ public class FormularioInscripcionCurso extends JPanel {
     private void inscribirEstudianteACurso() {
         Map<String, Object> datosFormulario = obtenerDatosFormulario();
         controlador.inscribirEstudianteACurso(datosFormulario);
+        notificar();
         this.limpiarCampos();
     }
 

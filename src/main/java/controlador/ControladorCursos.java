@@ -3,7 +3,7 @@ package controlador;
 import DAO.ProgramaDAO;
 import modelo.institucion.Curso;
 import modelo.institucion.Programa;
-import servicios.GestionCursos;
+import servicios.InscripcionesCursos;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Map;
 
 public class ControladorCursos {
-    private final GestionCursos modelo;
+    private final InscripcionesCursos modelo;
     private final PropertyChangeSupport notificadorMensajes;
 
     public ControladorCursos() {
-        modelo = new GestionCursos();
+        modelo = new InscripcionesCursos();
         notificadorMensajes = new PropertyChangeSupport(this);
     }
 
@@ -42,22 +42,24 @@ public class ControladorCursos {
         }
     }
 
-    public void elimnarCurso(double codigoCurso) {
-        if(codigoCurso <= 0) {
+    public void eliminarCurso(double codigoCurso) {
+        if (codigoCurso <= 0) {
             notificadorMensajes.firePropertyChange("mensaje", null, "Código Inválido");
             return;
         }
 
-        modelo.getCursos().stream().
-                filter(curso -> curso.getCodigo() == codigoCurso)
-                .findFirst().ifPresentOrElse(
+        modelo.getCursos().stream()
+                .filter(curso -> curso.getCodigo() == codigoCurso)
+                .findFirst()
+                .ifPresentOrElse(
                         curso -> {
-                            modelo.eliminarCurso(curso);
-                            notificadorMensajes.firePropertyChange("mensaje", null, "Curso eliminado correctamente.");
+                            String mensaje = modelo.eliminarCurso(curso);
+                            notificadorMensajes.firePropertyChange("mensaje", null, mensaje);
                         },
                         () -> notificadorMensajes.firePropertyChange("mensaje", null, "No se encontró el curso.")
                 );
     }
+
 
     public Curso buscarCursoPorCodigo(double codigoCurso) {
         Curso cursoEncontrado = modelo.buscarCursoPorCodigo(codigoCurso);

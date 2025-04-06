@@ -1,6 +1,6 @@
 package modelo.dbConfig;
 
-import main.utils.Configuracion;
+import utils.Configuracion;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

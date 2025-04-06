@@ -7,11 +7,11 @@ import modelo.institucion.Curso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GestionCursos implements Servicios {
+public class InscripcionesCursos implements Servicios {
     CursoDAO cursoDAO;
     List<Curso> listado;
 
-    public GestionCursos() {
+    public InscripcionesCursos() {
         cursoDAO = new CursoDAO();
         listado = new ArrayList<>();
     }
@@ -27,13 +27,17 @@ public class GestionCursos implements Servicios {
         cursoDAO.insertarCurso(curso);
     }
 
-    public void eliminarCurso(Curso curso) {
+    public String eliminarCurso(Curso curso) {
+        if (cursoDAO.tieneInscripciones(curso.getCodigo())) {
+            return "No se puede eliminar el curso, tiene inscripciones activas.";
+        }
+
         cursoDAO.eliminarCurso(curso);
 
         if (listado.removeIf(c -> c.getCodigo() == curso.getCodigo())) {
-            System.out.println(curso.getNombre() + "se ha eliminado correctamente de la lista.");
+            return curso.getNombre() + " se ha eliminado correctamente de la lista.";
         } else {
-            System.out.println("No se encontró el curso en el listado.");
+            return "No se encontró el curso en el listado.";
         }
     }
 
