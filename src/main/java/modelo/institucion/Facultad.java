@@ -1,10 +1,7 @@
 package modelo.institucion;
-
 import modelo.entidades.Persona;
 
-import java.io.Serializable;
-
-public class Facultad implements Serializable {
+public class Facultad {
     private double ID;
     private String nombre;
     private Persona decano;

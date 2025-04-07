@@ -1,10 +1,7 @@
 package modelo.institucion;
-
 import modelo.entidades.Estudiante;
 
-import java.io.Serializable;
-
-public class Inscripcion implements Serializable {
+public class Inscripcion {
     private double ID;
     private Curso curso;
     private int anio;

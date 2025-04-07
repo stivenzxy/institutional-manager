@@ -1,5 +1,6 @@
 package DAO;
 
+import fabricas.DAOFactory;
 import modelo.dbConfig.ConexionDB;
 import modelo.entidades.Estudiante;
 import modelo.institucion.Programa;
@@ -15,7 +16,7 @@ public class EstudianteDAO {
     private final PersonaDAO personaDAO;
 
     public EstudianteDAO() {
-        personaDAO = new PersonaDAO();
+        personaDAO = DAOFactory.crearPersonaDAO();
     }
 
     public void insertar(Estudiante estudiante) {

@@ -1,5 +1,6 @@
 package DAO;
 
+import fabricas.DAOFactory;
 import modelo.dbConfig.ConexionDB;
 import modelo.entidades.Estudiante;
 import modelo.entidades.Profesor;
@@ -15,7 +16,7 @@ public class ProfesorDAO {
     PersonaDAO personaDAO;
 
     public ProfesorDAO() {
-        personaDAO = new PersonaDAO();
+        personaDAO = DAOFactory.crearPersonaDAO();
     }
 
     public void insertar(Profesor profesor) {

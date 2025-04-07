@@ -1,39 +1,38 @@
-C:\java projects\institutional-manager\src\main\java\controlador\ControladorCursos.java
-C:\java projects\institutional-manager\src\main\java\controlador\ControladorCursosEstudiantes.java
-C:\java projects\institutional-manager\src\main\java\controlador\ControladorEstudiantes.java
-C:\java projects\institutional-manager\src\main\java\controlador\ControladorProfesores.java
-C:\java projects\institutional-manager\src\main\java\DAO\CursoDAO.java
-C:\java projects\institutional-manager\src\main\java\DAO\CursoProfesorDAO.java
-C:\java projects\institutional-manager\src\main\java\DAO\EstudianteDAO.java
-C:\java projects\institutional-manager\src\main\java\DAO\InscripcionDAO.java
-C:\java projects\institutional-manager\src\main\java\DAO\PersonaDAO.java
-C:\java projects\institutional-manager\src\main\java\DAO\ProfesorDAO.java
-C:\java projects\institutional-manager\src\main\java\DAO\ProgramaDAO.java
-C:\java projects\institutional-manager\src\main\java\interfaces\Observable.java
-C:\java projects\institutional-manager\src\main\java\interfaces\Observador.java
-C:\java projects\institutional-manager\src\main\java\interfaces\Servicios.java
-C:\java projects\institutional-manager\src\main\java\Main.java
-C:\java projects\institutional-manager\src\main\java\modelo\dbConfig\ConexionDB.java
-C:\java projects\institutional-manager\src\main\java\modelo\entidades\Estudiante.java
-C:\java projects\institutional-manager\src\main\java\modelo\entidades\Persona.java
-C:\java projects\institutional-manager\src\main\java\modelo\entidades\Profesor.java
-C:\java projects\institutional-manager\src\main\java\modelo\institucion\Curso.java
-C:\java projects\institutional-manager\src\main\java\modelo\institucion\Facultad.java
-C:\java projects\institutional-manager\src\main\java\modelo\institucion\Inscripcion.java
-C:\java projects\institutional-manager\src\main\java\modelo\institucion\Programa.java
-C:\java projects\institutional-manager\src\main\java\modelo\relaciones\CursoProfesor.java
-C:\java projects\institutional-manager\src\main\java\modelo\relaciones\CursosInscritos.java
-C:\java projects\institutional-manager\src\main\java\modelo\relaciones\CursosProfesores.java
-C:\java projects\institutional-manager\src\main\java\servicios\GestionCursos.java
-C:\java projects\institutional-manager\src\main\java\servicios\InscripcionesEstudiantes.java
-C:\java projects\institutional-manager\src\main\java\servicios\InscripcionesProfesores.java
-C:\java projects\institutional-manager\src\main\java\utils\AppendableObjectOutputStream.java
-C:\java projects\institutional-manager\src\main\java\utils\Configuracion.java
-C:\java projects\institutional-manager\src\main\java\vista\paneles\FormularioInscripcionCurso.java
-C:\java projects\institutional-manager\src\main\java\vista\paneles\HistorialCursosPanel.java
-C:\java projects\institutional-manager\src\main\java\vista\paneles\VistaCursosPanel.java
-C:\java projects\institutional-manager\src\main\java\vista\paneles\VistaProfesoresPanel.java
-C:\java projects\institutional-manager\src\main\java\vista\ventanas\EstudianteDetalle.java
-C:\java projects\institutional-manager\src\main\java\vista\ventanas\FormularioCurso.java
-C:\java projects\institutional-manager\src\main\java\vista\ventanas\FormularioEstudiante.java
-C:\java projects\institutional-manager\src\main\java\vista\ventanas\FormularioProfesor.java
+C:\java-projects\institutional-manager\src\main\java\controlador\ControladorCursos.java
+C:\java-projects\institutional-manager\src\main\java\controlador\ControladorCursosEstudiantes.java
+C:\java-projects\institutional-manager\src\main\java\controlador\ControladorEstudiantes.java
+C:\java-projects\institutional-manager\src\main\java\controlador\ControladorProfesores.java
+C:\java-projects\institutional-manager\src\main\java\DAO\CursoDAO.java
+C:\java-projects\institutional-manager\src\main\java\DAO\EstudianteDAO.java
+C:\java-projects\institutional-manager\src\main\java\DAO\InscripcionDAO.java
+C:\java-projects\institutional-manager\src\main\java\DAO\PersonaDAO.java
+C:\java-projects\institutional-manager\src\main\java\DAO\ProfesorDAO.java
+C:\java-projects\institutional-manager\src\main\java\DAO\ProgramaDAO.java
+C:\java-projects\institutional-manager\src\main\java\fabricas\ControladorFactory.java
+C:\java-projects\institutional-manager\src\main\java\fabricas\DAOFactory.java
+C:\java-projects\institutional-manager\src\main\java\fabricas\ServicioFactory.java
+C:\java-projects\institutional-manager\src\main\java\interfaces\GestorListado.java
+C:\java-projects\institutional-manager\src\main\java\interfaces\Observable.java
+C:\java-projects\institutional-manager\src\main\java\interfaces\Observador.java
+C:\java-projects\institutional-manager\src\main\java\Main.java
+C:\java-projects\institutional-manager\src\main\java\modelo\dbConfig\ConexionDB.java
+C:\java-projects\institutional-manager\src\main\java\modelo\entidades\Estudiante.java
+C:\java-projects\institutional-manager\src\main\java\modelo\entidades\Persona.java
+C:\java-projects\institutional-manager\src\main\java\modelo\entidades\Profesor.java
+C:\java-projects\institutional-manager\src\main\java\modelo\institucion\Curso.java
+C:\java-projects\institutional-manager\src\main\java\modelo\institucion\Facultad.java
+C:\java-projects\institutional-manager\src\main\java\modelo\institucion\Inscripcion.java
+C:\java-projects\institutional-manager\src\main\java\modelo\institucion\Programa.java
+C:\java-projects\institutional-manager\src\main\java\servicios\InscripcionesCursos.java
+C:\java-projects\institutional-manager\src\main\java\servicios\InscripcionesCursosEstudiantes.java
+C:\java-projects\institutional-manager\src\main\java\servicios\InscripcionesEstudiantes.java
+C:\java-projects\institutional-manager\src\main\java\servicios\InscripcionesProfesores.java
+C:\java-projects\institutional-manager\src\main\java\utils\Configuracion.java
+C:\java-projects\institutional-manager\src\main\java\vista\paneles\FormularioInscripcionCurso.java
+C:\java-projects\institutional-manager\src\main\java\vista\paneles\HistorialInscripcionesPanel.java
+C:\java-projects\institutional-manager\src\main\java\vista\paneles\VistaCursosPanel.java
+C:\java-projects\institutional-manager\src\main\java\vista\paneles\VistaProfesoresPanel.java
+C:\java-projects\institutional-manager\src\main\java\vista\ventanas\EstudianteDetalle.java
+C:\java-projects\institutional-manager\src\main\java\vista\ventanas\FormularioCurso.java
+C:\java-projects\institutional-manager\src\main\java\vista\ventanas\FormularioEstudiante.java
+C:\java-projects\institutional-manager\src\main\java\vista\ventanas\FormularioProfesor.java

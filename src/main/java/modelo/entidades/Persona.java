@@ -1,9 +1,6 @@
 package modelo.entidades;
 
-
-import java.io.Serializable;
-
-public abstract class Persona implements Serializable {
+public abstract class Persona {
     private double ID;
     private String nombres;
     private String apellidos;

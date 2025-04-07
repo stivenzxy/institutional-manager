@@ -1,8 +1,7 @@
 package modelo.institucion;
 
-import java.io.Serializable;
 
-public class Curso implements Serializable {
+public class Curso {
     private int ID;
     private double codigo;
     private String nombre;

@@ -1,13 +1,14 @@
 package servicios;
 
 import DAO.EstudianteDAO;
-import interfaces.Servicios;
+import fabricas.DAOFactory;
+import interfaces.GestorListado;
 import modelo.entidades.Estudiante;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class InscripcionesEstudiantes implements Servicios {
+public class InscripcionesEstudiantes implements GestorListado {
     private final List<Estudiante> listado;
     private final EstudianteDAO estudianteDAO;
 
@@ -17,7 +18,7 @@ public class InscripcionesEstudiantes implements Servicios {
 
     public InscripcionesEstudiantes() {
         listado = new ArrayList<>();
-        estudianteDAO = new EstudianteDAO();
+        estudianteDAO = DAOFactory.crearEstudianteDAO();
     }
 
     public void inscribirEstudiante(Estudiante estudiante) {

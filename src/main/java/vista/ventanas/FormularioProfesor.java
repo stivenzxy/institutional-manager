@@ -1,6 +1,7 @@
 package vista.ventanas;
 
 import controlador.ControladorProfesores;
+import fabricas.ControladorFactory;
 import interfaces.Observable;
 import interfaces.Observador;
 import modelo.entidades.Profesor;
@@ -16,17 +17,21 @@ import java.util.Map;
 
 public class FormularioProfesor extends JFrame implements PropertyChangeListener, Observable {
     private final ControladorProfesores controlador;
-    private final JTextField campoID, campoNombres, campoApellidos, campoEmail, campoTipoContrato;
-    private  final JLabel labelMensaje;
+    private JTextField campoID, campoNombres, campoApellidos, campoEmail, campoTipoContrato;
+    private JLabel labelMensaje;
 
     public static FormularioProfesor instancia;
     private final List<Observador> listadoDeObservadores;
 
-    public FormularioProfesor() {
-        controlador = new ControladorProfesores();
+    private FormularioProfesor() {
+        controlador = ControladorFactory.CrearControladorProfesores();
         controlador.agregarListener(this);
         listadoDeObservadores = new ArrayList<>();
 
+        inicializarComponentes();
+    }
+
+    private void inicializarComponentes() {
         setTitle("Formulario de Profesores");
         setSize(400, 350);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

@@ -1,5 +1,6 @@
 package controlador;
 
+import fabricas.ServicioFactory;
 import modelo.entidades.Estudiante;
 import modelo.institucion.Curso;
 import modelo.institucion.Inscripcion;
@@ -13,15 +14,15 @@ import java.util.List;
 import java.util.Map;
 
 public class ControladorCursosEstudiantes {
-    private final InscripcionesCursosEstudiantes modeloInscripcionesCursosEstudiantes;
-    private final InscripcionesEstudiantes modeloEstudiantes;
-    private final InscripcionesCursos modeloCursos;
+    private final InscripcionesCursosEstudiantes servicioInscripcionesCursosEstudiantes;
+    private final InscripcionesEstudiantes servicioEstudiantes;
+    private final InscripcionesCursos servicioCursos;
     private final PropertyChangeSupport notificadorMensajes;
 
     public ControladorCursosEstudiantes() {
-        modeloInscripcionesCursosEstudiantes = new InscripcionesCursosEstudiantes();
-        modeloEstudiantes = new InscripcionesEstudiantes();
-        modeloCursos = new InscripcionesCursos();
+        servicioInscripcionesCursosEstudiantes = ServicioFactory.crearInscripcionesCursosEstudiantes();
+        servicioEstudiantes = ServicioFactory.crearInscripcionesEstudiantes();
+        servicioCursos = ServicioFactory.crearInscripcionesCursos();
 
         notificadorMensajes = new PropertyChangeSupport(this);
     }
@@ -42,7 +43,7 @@ public class ControladorCursosEstudiantes {
             }
 
             Inscripcion inscripcion = construirObjetoInscripcion(datosFormulario);
-            modeloInscripcionesCursosEstudiantes.inscribir(inscripcion);
+            servicioInscripcionesCursosEstudiantes.inscribir(inscripcion);
             notificadorMensajes.firePropertyChange("mensaje", null, "Estudiante inscrito exitosamente!");
         } catch (IllegalArgumentException exception) {
             notificadorMensajes.firePropertyChange("mensaje", null, exception.getMessage());
@@ -50,26 +51,30 @@ public class ControladorCursosEstudiantes {
     }
 
     public List<Inscripcion> cargarInscripciones() {
-         return modeloInscripcionesCursosEstudiantes.cargarDatosH2();
+         return servicioInscripcionesCursosEstudiantes.cargarDatosH2();
     }
 
     public Estudiante buscarEstudiante(double codigoEstudiante) {
-        Estudiante estudianteEncontrado = modeloEstudiantes.buscarEstudiantePorCodigo(codigoEstudiante);
+        Estudiante estudianteEncontrado = servicioEstudiantes.buscarEstudiantePorCodigo(codigoEstudiante);
 
         if (estudianteEncontrado != null) {
-            modeloEstudiantes.getEstudiantes().removeIf(est -> est.getCodigo() == codigoEstudiante);
-            modeloEstudiantes.getEstudiantes().add(estudianteEncontrado);
+            servicioEstudiantes.getEstudiantes().removeIf(est -> est.getCodigo() == codigoEstudiante);
+            servicioEstudiantes.getEstudiantes().add(estudianteEncontrado);
         }
 
         return estudianteEncontrado;
     }
 
+    public List<Inscripcion> obtenerInscripcionesPorEstudiante(Estudiante estudiante) {
+        return servicioInscripcionesCursosEstudiantes.obtenerInscripcionesPorEstudiante(estudiante);
+    }
+
     public Curso buscarCurso(double codigoCurso) {
-        Curso cursoEncontrado = modeloCursos.buscarCursoPorCodigo(codigoCurso);
+        Curso cursoEncontrado = servicioCursos.buscarCursoPorCodigo(codigoCurso);
 
         if (cursoEncontrado != null) {
-            modeloCursos.getCursos().removeIf(c -> c.getCodigo() == codigoCurso);
-            modeloCursos.getCursos().add(cursoEncontrado);
+            servicioCursos.getCursos().removeIf(c -> c.getCodigo() == codigoCurso);
+            servicioCursos.getCursos().add(cursoEncontrado);
         }
 
         return cursoEncontrado;

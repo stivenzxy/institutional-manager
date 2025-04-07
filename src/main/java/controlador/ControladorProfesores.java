@@ -1,6 +1,6 @@
 package controlador;
 
-import modelo.entidades.Estudiante;
+import fabricas.ServicioFactory;
 import modelo.entidades.Profesor;
 import servicios.InscripcionesProfesores;
 
@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Map;
 
 public class ControladorProfesores {
-    private final InscripcionesProfesores modelo;
+    private final InscripcionesProfesores servicio;
     private final PropertyChangeSupport notificadorMensajes;
 
     public ControladorProfesores() {
-        modelo = new InscripcionesProfesores();
+        servicio = ServicioFactory.crearInscripcionesProfesores();
         notificadorMensajes = new PropertyChangeSupport(this);
     }
 
@@ -34,7 +34,7 @@ public class ControladorProfesores {
             }
 
             Profesor profesor = construirObjetoProfesor(datosFormulario);
-            modelo.inscribirProfesor(profesor);
+            servicio.inscribirProfesor(profesor);
             notificadorMensajes.firePropertyChange("mensaje", null, "Profesor guardado exitosamente!");
         } catch (IllegalArgumentException exception) {
             notificadorMensajes.firePropertyChange("mensaje", null, exception.getMessage());
@@ -43,16 +43,16 @@ public class ControladorProfesores {
 
     public void eliminarProfesor(Map<String, Object> datosFormulario) {
         String email = (String) datosFormulario.get("email");
-        double idProfesor = modelo.obtenerIdPorEmail(email);
+        double idProfesor = servicio.obtenerIdPorEmail(email);
 
         if(idProfesor <= 0 ) {
             notificadorMensajes.firePropertyChange("mensaje", null, "Código Inválido");
             return;
         }
 
-        modelo.getProfesores().stream().filter(profesor -> profesor.getID() == idProfesor).findFirst().ifPresentOrElse(
+        servicio.getProfesores().stream().filter(profesor -> profesor.getID() == idProfesor).findFirst().ifPresentOrElse(
                 profesor -> {
-                    modelo.eliminarProfesor(profesor);
+                    servicio.eliminarProfesor(profesor);
                     notificadorMensajes.firePropertyChange("mensaje", null, "Profesor eliminado exitosamente!");
                 },
                 () -> notificadorMensajes.firePropertyChange("mensaje", null, "No se encontró el profesor.")
@@ -60,18 +60,18 @@ public class ControladorProfesores {
     }
 
     public Profesor buscarProfesorPorId(double idProfesor) {
-        Profesor profesorEncontrado = modelo.buscarProfesorPorId(idProfesor);
+        Profesor profesorEncontrado = servicio.buscarProfesorPorId(idProfesor);
 
         if (profesorEncontrado != null) {
-            modelo.getProfesores().removeIf(prof -> prof.getID() == profesorEncontrado.getID());
-            modelo.getProfesores().add(profesorEncontrado);
+            servicio.getProfesores().removeIf(prof -> prof.getID() == profesorEncontrado.getID());
+            servicio.getProfesores().add(profesorEncontrado);
         }
 
         return profesorEncontrado;
     }
 
     public List<Profesor> cargarProfesores() {
-        return modelo.cargarDatosH2();
+        return servicio.cargarDatosH2();
     }
 
     public void agregarListener(PropertyChangeListener listener) {

@@ -1,19 +1,20 @@
 package servicios;
 
 import DAO.ProfesorDAO;
-import interfaces.Servicios;
+import fabricas.DAOFactory;
+import interfaces.GestorListado;
 import modelo.entidades.Profesor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class InscripcionesProfesores implements Servicios {
+public class InscripcionesProfesores implements GestorListado {
     private final List<Profesor> listado;
     private final ProfesorDAO profesorDAO;
 
     public InscripcionesProfesores() {
         listado = new ArrayList<>();
-        profesorDAO = new ProfesorDAO();
+        profesorDAO = DAOFactory.crearProfesorDAO();
     }
 
     public List<Profesor> getProfesores() { return listado; }

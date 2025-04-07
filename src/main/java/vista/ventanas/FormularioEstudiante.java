@@ -1,6 +1,7 @@
 package vista.ventanas;
 
 import controlador.ControladorEstudiantes;
+import fabricas.ControladorFactory;
 import interfaces.Observable;
 import interfaces.Observador;
 import modelo.entidades.Estudiante;
@@ -17,19 +18,23 @@ import java.util.List;
 
 public class FormularioEstudiante extends JFrame implements PropertyChangeListener, Observable {
     private final ControladorEstudiantes controlador;
-    private final JTextField campoCodigo, campoNombres, campoApellidos, campoEmail, campoPromedio;
-    private final JCheckBox checkActivo;
-    private final JComboBox<Programa> selectorPrograma;
-    private final JLabel labelMensaje;
+    private JTextField campoCodigo, campoNombres, campoApellidos, campoEmail, campoPromedio;
+    private JCheckBox checkActivo;
+    private JComboBox<Programa> selectorPrograma;
+    private JLabel labelMensaje;
 
     public static FormularioEstudiante instancia;
     private final List<Observador> listadoDeObservadores;
 
-    public FormularioEstudiante() {
-        controlador = new ControladorEstudiantes();
+    private FormularioEstudiante() {
+        controlador = ControladorFactory.CrearControladorEstudiantes();
         controlador.agregarListener(this);
         listadoDeObservadores = new ArrayList<>();
 
+        inicializarComponentes();
+    }
+
+    private void inicializarComponentes() {
         setTitle("Formulario de Estudiantes");
         setSize(400, 350);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -42,8 +47,8 @@ public class FormularioEstudiante extends JFrame implements PropertyChangeListen
 
         campoCodigo = new JTextField(15);
         campoNombres = new JTextField(15);
-        campoApellidos = new JTextField(15);
         campoEmail = new JTextField(15);
+        campoApellidos = new JTextField(15);
         campoPromedio = new JTextField(15);
         checkActivo = new JCheckBox();
         selectorPrograma = new JComboBox<>();

@@ -45,6 +45,14 @@ public class Estudiante extends Persona {
     public void setPrograma(Programa programa) { this.programa = programa; }
 
     @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Estudiante that = (Estudiante) obj;
+        return this.codigo == that.codigo;
+    }
+
+    @Override
     public String toString() {
         return getNombres() + " " + getApellidos();
     }

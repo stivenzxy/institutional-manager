@@ -76,4 +76,43 @@ public class InscripcionDAO {
         }
         return inscripciones;
     }
+
+    public List<Inscripcion> obtenerPorEstudiante(Estudiante estudiante) {
+        List<Inscripcion> inscripciones = new ArrayList<>();
+        String sql = """
+                    SELECT i.id AS inscripcion_id, i.anio, i.periodo,
+                           c.id AS curso_id, c.nombre AS curso_nombre
+                    FROM inscripciones i
+                    JOIN cursos c ON i.curso_id = c.id
+                    JOIN estudiantes e ON i.estudiante_id = e.id
+                    WHERE e.codigo = ?
+                    """;
+
+        try (Connection conn = ConexionDB.obtenerInstancia().getConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setDouble(1, estudiante.getCodigo());
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Curso curso = new Curso(
+                        rs.getInt("curso_id"),
+                        rs.getString("curso_nombre")
+                );
+
+                Inscripcion inscripcion = new Inscripcion(
+                        rs.getDouble("inscripcion_id"),
+                        curso,
+                        rs.getInt("anio"),
+                        rs.getInt("periodo"),
+                        estudiante
+                );
+
+                inscripciones.add(inscripcion);
+            }
+        } catch (SQLException exception) {
+            logger.log(Level.SEVERE, "Error al obtener inscripciones por código de estudiante", exception);
+        }
+        return inscripciones;
+    }
 }

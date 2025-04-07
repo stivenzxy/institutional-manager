@@ -12,9 +12,7 @@ public class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             ConexionDB.obtenerInstancia().inicializarBaseDeDatos();
-            EstudianteDetalle estudianteDetalle = new EstudianteDetalle();
-
-            estudianteDetalle.setVisible(true);
+            EstudianteDetalle.getInstancia().setVisible(true);
         });
     }
 }

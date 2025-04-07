@@ -1,8 +1,11 @@
 package vista.paneles;
 
 import controlador.ControladorCursosEstudiantes;
+import fabricas.ControladorFactory;
 import interfaces.Observador;
+import modelo.entidades.Estudiante;
 import modelo.institucion.Inscripcion;
+import vista.ventanas.EstudianteDetalle;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -13,16 +16,19 @@ public class HistorialInscripcionesPanel extends JPanel implements Observador {
     private DefaultTableModel modeloTabla;
     private final ControladorCursosEstudiantes controlador;
 
-    public HistorialInscripcionesPanel() {
-        controlador = new ControladorCursosEstudiantes();
+    private static HistorialInscripcionesPanel instancia;
+    private Estudiante estudiante;
 
-        setLayout(new BorderLayout());
+    private HistorialInscripcionesPanel() {
+        controlador = ControladorFactory.CrearControladorCursosEstudiantes();
+
         inicializarComponentes();
-        cargarCursos();
+        EstudianteDetalle.getInstancia().adicionarObservador(this);
         FormularioInscripcionCurso.getInstancia().adicionarObservador(this);
     }
 
     private void inicializarComponentes() {
+        setLayout(new BorderLayout());
         modeloTabla = new DefaultTableModel();
         modeloTabla.setColumnIdentifiers(new String[]{"ID", "Curso", "Estudiante", "Año", "Periodo"});
 
@@ -33,6 +39,17 @@ public class HistorialInscripcionesPanel extends JPanel implements Observador {
         add(scrollPane, BorderLayout.CENTER);
     }
 
+    public static HistorialInscripcionesPanel getInstancia() {
+        if (instancia == null) {
+            instancia = new HistorialInscripcionesPanel();
+        }
+        return instancia;
+    }
+
+    public void setEstudiante(Estudiante estudiante) {
+        this.estudiante = estudiante;
+    }
+
     @Override
     public void actualizar() {
         cargarCursos();
@@ -40,16 +57,26 @@ public class HistorialInscripcionesPanel extends JPanel implements Observador {
 
     private void cargarCursos() {
         modeloTabla.setRowCount(0);
-        List<Inscripcion> inscripciones = controlador.cargarInscripciones();
 
-        for (Inscripcion inscripcion : inscripciones) {
-            modeloTabla.addRow(new Object[]{
-                    inscripcion.getID(),
-                    inscripcion.getCurso().getNombre(),
-                    inscripcion.getEstudiante().toString(),
-                    inscripcion.getAnio(),
-                    inscripcion.getPeriodo()
-            });
+        if (estudiante == null) {
+            modeloTabla.addRow(new Object[]{"No se", "ha seleccionado", "un", "estudiante", "válido"});
+            return;
+        }
+
+        List<Inscripcion> inscripciones = controlador.obtenerInscripcionesPorEstudiante(estudiante);
+
+        if (inscripciones == null || inscripciones.isEmpty()) {
+            modeloTabla.addRow(new Object[]{"El", "estudiante", "no tiene", "cursos", "asignados"});
+        } else {
+            for (Inscripcion inscripcion : inscripciones) {
+                modeloTabla.addRow(new Object[]{
+                        inscripcion.getID(),
+                        inscripcion.getCurso().getNombre(),
+                        inscripcion.getEstudiante().toString(),
+                        inscripcion.getAnio(),
+                        inscripcion.getPeriodo()
+                });
+            }
         }
     }
 }

@@ -1,6 +1,9 @@
 package vista.ventanas;
 
 import controlador.ControladorCursosEstudiantes;
+import fabricas.ControladorFactory;
+import interfaces.Observable;
+import interfaces.Observador;
 import modelo.entidades.Estudiante;
 import vista.paneles.FormularioInscripcionCurso;
 import vista.paneles.HistorialInscripcionesPanel;
@@ -9,23 +12,30 @@ import vista.paneles.VistaProfesoresPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class EstudianteDetalle extends JFrame {
+public class EstudianteDetalle extends JFrame implements Observable {
     private JTextField campoCodigo;
     private JTextField campoEstudiante;
     private JButton botonBuscar;
     private JTabbedPane tabs;
 
     private final ControladorCursosEstudiantes controlador;
+    private final List<Observador> listadoDeObservadores;
+    private static EstudianteDetalle instancia;
 
-    public EstudianteDetalle() {
-        controlador = new ControladorCursosEstudiantes();
+    private EstudianteDetalle() {
+        controlador = ControladorFactory.CrearControladorCursosEstudiantes();
+        listadoDeObservadores = new ArrayList<>();
+    }
 
+    private void inicializar() {
         configurarVentana();
         agregarComponentes();
         configurarMenu();
 
-        botonBuscar.addActionListener(evento->buscarEstudiante());
+        botonBuscar.addActionListener(evento -> buscarEstudiante());
     }
 
     private void configurarVentana() {
@@ -48,7 +58,7 @@ public class EstudianteDetalle extends JFrame {
     private void configurarMenu() {
         JMenuBar menuBar = new JMenuBar();
 
-        JMenu menuFormularios = new JMenu("Menú");
+        JMenu menuFormularios = new JMenu("Menú de Formularios >");
         JMenuItem itemCursos = new JMenuItem("Formulario de Cursos");
         itemCursos.addActionListener(evento -> FormularioCurso.getInstancia().setVisible(true));
         JMenuItem itemProfesores = new JMenuItem("Formulario de Profesores");
@@ -97,8 +107,8 @@ public class EstudianteDetalle extends JFrame {
 
     private JPanel crearPanelPestanias() {
         tabs = new JTabbedPane(JTabbedPane.TOP);
-        tabs.addTab("Historial Cursos", new HistorialInscripcionesPanel());
-        tabs.addTab("Inscribir Curso", new FormularioInscripcionCurso());
+        tabs.addTab("Historial Cursos", HistorialInscripcionesPanel.getInstancia());
+        tabs.addTab("Inscribir Curso", FormularioInscripcionCurso.getInstancia());
         tabs.addTab("Cursos", new VistaCursosPanel());
         tabs.addTab("Profesores", new VistaProfesoresPanel());
 
@@ -108,26 +118,63 @@ public class EstudianteDetalle extends JFrame {
         return panelPestanias;
     }
 
+    public static EstudianteDetalle getInstancia() {
+        if (instancia == null) {
+            instancia = new EstudianteDetalle();
+            instancia.inicializar();
+        }
+        return instancia;
+    }
+
+    @Override
+    public void notificar() {
+        System.out.println("Notificando observadores...");
+        for (Observador observador : listadoDeObservadores) {
+            observador.actualizar();
+        }
+    }
+
+    @Override
+    public void adicionarObservador(Observador observador) {
+        listadoDeObservadores.add(observador);
+    }
+
+    @Override
+    public void removerObservador(Observador observador) {
+        listadoDeObservadores.remove(observador);
+    }
+
     private void buscarEstudiante() {
         try {
             double codigo = Double.parseDouble(campoCodigo.getText());
             Estudiante estudiante = controlador.buscarEstudiante(codigo);
 
-            if (estudiante != null) {
-                campoEstudiante.setText(estudiante.toString());
+            campoEstudiante.setText(estudiante != null ? estudiante.toString() : "");
 
-                for (int i = 0; i < tabs.getTabCount(); i++) {
-                    Component componente = tabs.getComponentAt(i);
-                    if (componente instanceof FormularioInscripcionCurso) {
-                        ((FormularioInscripcionCurso) componente).setEstudiante(estudiante);
-                        break;
-                    }
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Estudiante no encontrado.");
+            String mensaje = estudiante != null ? "" : "Estudiante no encontrado.";
+            if (!mensaje.isEmpty()) {
+                JOptionPane.showMessageDialog(this, mensaje);
             }
+
+            actualizarComponentesConEstudiante(estudiante);
+            notificar();
         } catch (NumberFormatException e) {
+            campoEstudiante.setText("");
             JOptionPane.showMessageDialog(this, "Código inválido.");
+            actualizarComponentesConEstudiante(null);
+            notificar();
+        }
+    }
+
+    private void actualizarComponentesConEstudiante(Estudiante estudiante) {
+        for (int i = 0; i < tabs.getTabCount(); i++) {
+            Component componente = tabs.getComponentAt(i);
+            if (componente instanceof FormularioInscripcionCurso) {
+                ((FormularioInscripcionCurso) componente).setEstudiante(estudiante);
+            }
+            if (componente instanceof HistorialInscripcionesPanel) {
+                ((HistorialInscripcionesPanel) componente).setEstudiante(estudiante);
+            }
         }
     }
 }

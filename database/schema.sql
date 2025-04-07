@@ -83,7 +83,3 @@ MERGE INTO profesores (id, tipoContrato) KEY(id) VALUES (2, 'Catedrático');
 
 MERGE INTO estudiantes (id, codigo, activo, promedio, programa_id) KEY(id) VALUES
         (3, 160004725, TRUE, 3.6, 1);
-
-MERGE INTO cursos (codigo, nombre, activo, programa_id) KEY (codigo) VALUES
-        (1020, 'Tecnologías Avanzadas', TRUE, 1),
-        (4150, 'Procesos Estocásticos', TRUE, 1);

@@ -1,18 +1,20 @@
 package servicios;
 
 import DAO.InscripcionDAO;
-import interfaces.Servicios;
+import fabricas.DAOFactory;
+import interfaces.GestorListado;
+import modelo.entidades.Estudiante;
 import modelo.institucion.Inscripcion;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class InscripcionesCursosEstudiantes implements Servicios {
+public class InscripcionesCursosEstudiantes implements GestorListado {
     private final List<Inscripcion> listado;
     private final InscripcionDAO inscripcionDAO;
 
     public InscripcionesCursosEstudiantes() {
-        this.inscripcionDAO = new InscripcionDAO();
+        this.inscripcionDAO = DAOFactory.crearInscripcionDAO();
         this.listado = new ArrayList<>();
     }
 
@@ -23,6 +25,11 @@ public class InscripcionesCursosEstudiantes implements Servicios {
     public void inscribir(Inscripcion inscripcion) {
         listado.add(inscripcion);
         inscripcionDAO.insertarInscripcion(inscripcion);
+    }
+
+    public List<Inscripcion> obtenerInscripcionesPorEstudiante(Estudiante estudiante) {
+        listado.clear();
+        return inscripcionDAO.obtenerPorEstudiante(estudiante);
     }
 
     public List<Inscripcion> cargarDatosH2() {

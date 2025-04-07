@@ -1,18 +1,19 @@
 package servicios;
 
 import DAO.CursoDAO;
-import interfaces.Servicios;
+import fabricas.DAOFactory;
+import interfaces.GestorListado;
 import modelo.institucion.Curso;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class InscripcionesCursos implements Servicios {
+public class InscripcionesCursos implements GestorListado {
     CursoDAO cursoDAO;
     List<Curso> listado;
 
     public InscripcionesCursos() {
-        cursoDAO = new CursoDAO();
+        cursoDAO = DAOFactory.crearCursoDAO();
         listado = new ArrayList<>();
     }
 

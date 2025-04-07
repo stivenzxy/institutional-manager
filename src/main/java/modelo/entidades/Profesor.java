@@ -1,8 +1,6 @@
 package modelo.entidades;
 
-import java.io.Serializable;
-
-public class Profesor extends Persona implements Serializable {
+public class Profesor extends Persona {
     private String tipoContrato;
 
     public Profesor(String nombres, String apellidos, String email, String tipoContrato) {

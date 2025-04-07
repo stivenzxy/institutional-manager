@@ -1,6 +1,7 @@
 package vista.paneles;
 
 import controlador.ControladorCursosEstudiantes;
+import fabricas.ControladorFactory;
 import interfaces.Observable;
 import interfaces.Observador;
 import modelo.entidades.Estudiante;
@@ -11,16 +12,18 @@ import vista.ventanas.FormularioEstudiante;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FormularioInscripcionCurso extends JPanel implements Observable {
-    private final JTextField campoCodigo;
-    private final JTextField campoCurso;
-    private final JTextField campoAnio;
-    private final JComboBox<String> selectorPeriodo;
+public class FormularioInscripcionCurso extends JPanel implements PropertyChangeListener, Observable {
+    private JTextField campoCodigo;
+    private JTextField campoCurso;
+    private JTextField campoAnio;
+    private JComboBox<String> selectorPeriodo;
 
     private Estudiante estudiante;
     private final ControladorCursosEstudiantes controlador;
@@ -28,10 +31,15 @@ public class FormularioInscripcionCurso extends JPanel implements Observable {
     private static FormularioInscripcionCurso instancia;
     private final List<Observador> listadoDeObservadores;
 
-    public FormularioInscripcionCurso() {
-        controlador = new ControladorCursosEstudiantes();
+    private FormularioInscripcionCurso() {
+        controlador = ControladorFactory.CrearControladorCursosEstudiantes();
+        controlador.agregarListener(this);
         listadoDeObservadores = new ArrayList<>();
 
+        inicializarComponentes();
+    }
+
+    private void inicializarComponentes(){
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -116,6 +124,7 @@ public class FormularioInscripcionCurso extends JPanel implements Observable {
         this.estudiante = estudiante;
     }
 
+
     private Map<String, Object> obtenerDatosFormulario() {
         Map<String, Object> datos = new HashMap<>();
 
@@ -146,6 +155,7 @@ public class FormularioInscripcionCurso extends JPanel implements Observable {
         Map<String, Object> datosFormulario = obtenerDatosFormulario();
         controlador.inscribirEstudianteACurso(datosFormulario);
         notificar();
+
         this.limpiarCampos();
     }
 
@@ -170,5 +180,12 @@ public class FormularioInscripcionCurso extends JPanel implements Observable {
         campoCurso.setText("");
         campoAnio.setText("");
         selectorPeriodo.setSelectedItem(null);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evento) {
+        if ("mensaje".equals(evento.getPropertyName())) {
+            JOptionPane.showMessageDialog(this, evento.getNewValue().toString(), "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 }

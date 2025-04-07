@@ -1,6 +1,7 @@
 package vista.paneles;
 
 import controlador.ControladorProfesores;
+import fabricas.ControladorFactory;
 import interfaces.Observador;
 import modelo.entidades.Profesor;
 import vista.ventanas.FormularioProfesor;
@@ -15,7 +16,7 @@ public class VistaProfesoresPanel extends JPanel implements Observador {
     private final ControladorProfesores controlador;
 
     public VistaProfesoresPanel() {
-        controlador = new ControladorProfesores();
+        controlador = ControladorFactory.CrearControladorProfesores();
 
         setLayout(new BorderLayout());
         inicializarComponentes();

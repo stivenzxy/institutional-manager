@@ -1,6 +1,7 @@
 package vista.ventanas;
 
 import controlador.ControladorCursos;
+import fabricas.ControladorFactory;
 import interfaces.Observable;
 import interfaces.Observador;
 import modelo.institucion.Curso;
@@ -17,19 +18,23 @@ import java.util.Map;
 
 public class FormularioCurso extends JFrame implements PropertyChangeListener, Observable {
     private final ControladorCursos controlador;
-    private final JTextField campoCodigo, campoNombre;
-    private final JCheckBox checkActivo;
-    private final JComboBox<Programa> selectorPrograma;
-    private final JLabel labelMensaje;
+    private JTextField campoCodigo, campoNombre;
+    private JCheckBox checkActivo;
+    private JComboBox<Programa> selectorPrograma;
+    private JLabel labelMensaje;
 
     private static FormularioCurso instancia;
     private final List<Observador> listadoDeObservadores;
 
     private FormularioCurso() {
-        controlador = new ControladorCursos();
+        controlador = ControladorFactory.CrearControladorCursos();
         controlador.agregarListener(this);
         listadoDeObservadores = new ArrayList<>();
 
+        inicializarComponentes();
+    }
+
+    private void inicializarComponentes() {
         setTitle("Formulario de Cursos");
         setSize(400, 350);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

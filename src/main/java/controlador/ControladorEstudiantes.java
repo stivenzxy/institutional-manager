@@ -1,6 +1,7 @@
 package controlador;
 
 import DAO.ProgramaDAO;
+import fabricas.ServicioFactory;
 import modelo.entidades.Estudiante;
 import modelo.institucion.Programa;
 import servicios.InscripcionesEstudiantes;
@@ -11,11 +12,11 @@ import java.util.List;
 import java.util.Map;
 
 public class ControladorEstudiantes {
-    private final InscripcionesEstudiantes modelo;
+    private final InscripcionesEstudiantes servicio;
     private final PropertyChangeSupport notificadorMensajes;
 
     public ControladorEstudiantes() {
-        modelo = new InscripcionesEstudiantes();
+        servicio = ServicioFactory.crearInscripcionesEstudiantes();
         notificadorMensajes = new PropertyChangeSupport(this);
     }
 
@@ -38,7 +39,7 @@ public class ControladorEstudiantes {
             }
 
             Estudiante estudiante = construirObjetoEstudiante(datosFormulario);
-            modelo.inscribirEstudiante(estudiante);
+            servicio.inscribirEstudiante(estudiante);
             notificadorMensajes.firePropertyChange("mensaje", null, "Estudiante guardado exitosamente!");
         } catch (IllegalArgumentException exception) {
             notificadorMensajes.firePropertyChange("mensaje", null, exception.getMessage());
@@ -51,11 +52,11 @@ public class ControladorEstudiantes {
             return;
         }
 
-        modelo.getEstudiantes().stream().
+        servicio.getEstudiantes().stream().
                 filter(estudiante -> estudiante.getCodigo() == codigoEstudiante)
                 .findFirst().ifPresentOrElse(
                         estudiante -> {
-                        modelo.eliminarEstudiante(estudiante);
+                        servicio.eliminarEstudiante(estudiante);
                         notificadorMensajes.firePropertyChange("mensaje", null, "Estudiante eliminado correctamente.");
                         },
                         () -> notificadorMensajes.firePropertyChange("mensaje", null, "No se encontró el estudiante.")
@@ -63,18 +64,18 @@ public class ControladorEstudiantes {
     }
 
     public Estudiante buscarEstudiantePorCodigo(double codigoEstudiante) {
-        Estudiante estudianteEncontrado = modelo.buscarEstudiantePorCodigo(codigoEstudiante);
+        Estudiante estudianteEncontrado = servicio.buscarEstudiantePorCodigo(codigoEstudiante);
 
         if (estudianteEncontrado != null) {
-            modelo.getEstudiantes().removeIf(est -> est.getCodigo() == codigoEstudiante);
-            modelo.getEstudiantes().add(estudianteEncontrado);
+            servicio.getEstudiantes().removeIf(est -> est.getCodigo() == codigoEstudiante);
+            servicio.getEstudiantes().add(estudianteEncontrado);
         }
 
         return estudianteEncontrado;
     }
 
     public List<Estudiante> cargarEstudiantes() {
-        return modelo.cargarDatosH2();
+        return servicio.cargarDatosH2();
     }
 
     public void cargarProgramas() {
